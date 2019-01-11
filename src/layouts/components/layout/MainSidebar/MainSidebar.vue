@@ -33,12 +33,14 @@
               </div>
               <div v-else>
                 <d-link :class="['nav-link', item.items && item.items.length ? 'dropdown-toggle' : '']" :to="item.to" v-d-toggle="`snc-${navItemIdx}`">
-                  <div class="item-icon-wrapper" v-if="item.htmlBefore" v-html="item.htmlBefore" />
+                  <!--<div class="item-icon-wrapper" v-if="item.htmlBefore" v-html="item.htmlBefore"></div>-->
+                  <i class="material-icons">{{ item.icon }}</i>
                   <span v-if="item.title">{{ item.title }}</span>
-                  <div class="item-icon-wrapper" v-if="item.htmlAfter" v-html="item.htmlAfter" />
+                  <!--<div class="item-icon-wrapper" v-if="item.htmlAfter" v-html="item.htmlAfter"></div>-->
                 </d-link>
                 <d-collapse v-if="item.items && item.items.length" :id="`snc-${navItemIdx}`" class="dropdown-menu dropdown-menu-small" accordion="sidebar-items-accordion">
                   <d-dropdown-item v-for="(subItem, subItemIdx) in item.items" :key="subItemIdx" :href="subItem.href" :to="subItem.to">
+                    <i class="material-icons">{{ subItem.icon }}</i>
                     {{ subItem.title }}
                   </d-dropdown-item>
                 </d-collapse>

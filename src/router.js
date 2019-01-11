@@ -1,9 +1,17 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import VueTest from './views/test/VueTest.vue';
-import VueTest2 from './views/test/VueTest2.vue';
-import VueTest3 from './views/test/VueTest3.vue';
+// dashboard
+import Dashboard from './views/Dashboard.vue';
+
+// scanner
+import AliothNewScan from './views/scanner/alioth/AliothNewScan'
+import AliothScans from './views/scanner/alioth/AliothScans'
+import NessusNewScan from './views/scanner/nessus/NessusNewScan'
+
+// information gathering
+import DomainBuster from './views/info/subdomain/DomainBuster'
+
 
 Vue.use(Router);
 
@@ -19,22 +27,35 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/test1',
+      redirect: '/dashboard',
     },
     {
-      path: '/test1',
-      name: 'vue-test-1',
-      component: VueTest,
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard,
+    },
+
+    // scanner
+    {
+      path: '/scanner/alioth/new_scan',
+      name: 'AliothNewScan',
+      component: AliothNewScan,
     },
     {
-      path: '/test2',
-      name: 'vue-test-2',
-      component: VueTest2,
+      path: '/scanner/alioth/scans',
+      name: 'AliothScans',
+      component: AliothScans,
     },
     {
-      path: '/test3',
-      name: 'vue-test-3',
-      component: VueTest3,
+      path: '/scanner/nessus/new_scan',
+      name: 'NessusNewScan',
+      component: NessusNewScan,
+    },
+
+    {
+      path: '/info/subdomain',
+      name: 'DomainBuster',
+      component: DomainBuster,
     },
   ],
 });

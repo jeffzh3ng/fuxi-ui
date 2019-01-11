@@ -1,40 +1,43 @@
 export default function () {
   return [
     {
-      title: 'Test Page',
-      to: {
-        name: 'vue-test-1',
-      },
-      htmlBefore: '<i class="material-icons">edit</i>',
-      htmlAfter: '',
+      title: 'Dashboard',
+      to: { name: 'Dashboard' },
+      icon: 'multiline_chart',
     },
     {
-      title: 'title',
+      title: '漏洞扫描',
       tag: true,
     },
     {
-      title: 'sub item',
-      htmlBefore: '<i class="material-icons">edit</i>',
+      title: 'Alioth Scanner',
+      icon: 'filter_center_focus',
       items: [
         {
-          title: 'item1',
-          to: {
-            name: 'vue-test-2',
-          },
+          title: '新建任务',
+          icon: 'add',
+          to: { name: 'AliothNewScan' },
         },
+        {
+          title: '任务列表',
+          icon: 'list',
+          to: { name: 'AliothScans' }
+        }
       ],
     },
     {
-      title: '中文分割',
+      title: 'Nessus Scanner',
+      to: { name: 'NessusNewScan' },
+      icon: 'navigation',
+    },
+    {
+      title: '信息收集',
       tag: true,
     },
     {
-      title: '中文测试',
-      to: {
-        name: 'vue-test-3',
-      },
-      htmlBefore: '<i class="material-icons">bug_report</i>',
-      htmlAfter: '',
-    },
+      title: '子域名收集',
+      to: { name: 'DomainBuster' },
+      icon: 'domain',
+    }
   ];
 }
