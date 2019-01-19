@@ -31,7 +31,7 @@ import MainSidebar from './components/layout/MainSidebar/MainSidebar.vue';
 import MainFooter from './components/layout/MainFooter/MainFooter.vue';
 
 export default {
-  name: 'analytics',
+  name: 'Default',
   components: {
     MainNavbar,
     MainSidebar,

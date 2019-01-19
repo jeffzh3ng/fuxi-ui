@@ -6,11 +6,11 @@
 
 <script>
 export default {
-  computed: {
-    layout() {
-      console.log(`${this.$route.meta.layout}`);
-      return `${this.$route.meta.layout || 'default'}-layout`;
-    },
-  },
+  // computed: {
+  //   layout() {
+  //     console.log(`${this.$route.meta.layout}`);
+  //     return `${this.$route.meta.layout || 'default'}-layout`;
+  //   },
+  // },
 };
 </script>

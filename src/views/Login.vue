@@ -39,8 +39,8 @@
                         </d-col>
                       </d-form-row>
                       <d-form-row>
-                        <d-col md="12" class="form-group">
-                          <Button type="primary" long shape="circle"> Access Account</Button>
+                        <d-col md="12" class="form-group ">
+                          <d-button type="primary" shape="circle"> Access Account</d-button>
                         </d-col>
                       </d-form-row>
                     </d-form>
