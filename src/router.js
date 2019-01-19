@@ -1,6 +1,12 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
+// DefaultContainer
+import DefaultContainer from './layouts/Default.vue';
+
+// Login
+import Login from './views/Login.vue';
+
 // dashboard
 import Dashboard from './views/Dashboard.vue';
 
@@ -16,46 +22,53 @@ import DomainBuster from './views/info/subdomain/DomainBuster'
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
-  // base: process.env.BASE_URL,
-  base: '/',
-  linkActiveClass: 'active',
-  linkExactActiveClass: 'exact-active',
-  scrollBehavior() {
-    return { x: 0, y: 0 };
-  },
+  mode: 'hash', // https://router.vuejs.org/api/#mode
+  linkActiveClass: 'open active',
   routes: [
     {
       path: '/',
       redirect: '/dashboard',
-    },
-    {
-      path: '/dashboard',
-      name: 'Dashboard',
-      component: Dashboard,
-    },
+      name: 'Home',
+      component: DefaultContainer,
+      children: [
+        {
+          path: '/',
+          redirect: '/dashboard',
+        },
+        {
+          path: '/dashboard',
+          name: 'Dashboard',
+          component: Dashboard,
+        },
 
-    // scanner
-    {
-      path: '/scanner/alioth/new_scan',
-      name: 'AliothNewScan',
-      component: AliothNewScan,
-    },
-    {
-      path: '/scanner/alioth/scans',
-      name: 'AliothScans',
-      component: AliothScans,
-    },
-    {
-      path: '/scanner/nessus/new_scan',
-      name: 'NessusNewScan',
-      component: NessusNewScan,
-    },
+        // scanner
+        {
+          path: '/scanner/alioth/new_scan',
+          name: 'AliothNewScan',
+          component: AliothNewScan,
+        },
+        {
+          path: '/scanner/alioth/scans',
+          name: 'AliothScans',
+          component: AliothScans,
+        },
+        {
+          path: '/scanner/nessus/new_scan',
+          name: 'NessusNewScan',
+          component: NessusNewScan,
+        },
 
+        {
+          path: '/info/subdomain',
+          name: 'DomainBuster',
+          component: DomainBuster,
+        },
+      ]
+    },
     {
-      path: '/info/subdomain',
-      name: 'DomainBuster',
-      component: DomainBuster,
+      path: '/login',
+      name: "Login",
+      component: Login,
     },
   ],
 });

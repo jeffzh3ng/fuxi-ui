@@ -8,7 +8,9 @@
 
         <!-- Main Navbar -->
         <main-navbar />
-
+        <router-view>
+          <!--this is content -->
+        </router-view>
         <!-- Content -->
         <slot />
 

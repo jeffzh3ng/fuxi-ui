@@ -43,7 +43,7 @@
         <d-dropdown-item><i class="material-icons">&#xE2C7;</i> Files</d-dropdown-item>
         <d-dropdown-item><i class="material-icons">&#xE896;</i> Transactions</d-dropdown-item>
         <d-dropdown-divider />
-        <d-dropdown-item href="#" class="text-danger">
+        <d-dropdown-item href="/#/login" class="text-danger">
           <i class="material-icons text-danger">&#xE879;</i> Logout
         </d-dropdown-item>
       </d-collapse>
