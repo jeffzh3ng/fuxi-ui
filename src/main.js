@@ -29,7 +29,7 @@ import router from './router';
 import Axios from 'axios'
 
 // Layouts
-import Default from './layouts/Default.vue';
+import DefaultLayout from './layouts/DefaultLayout.vue';
 
 // Vue.use(iView);
 Vue.component('Button', button);
@@ -46,7 +46,7 @@ Vue.component('Slider', slider);
 Vue.component('Transfer', transfer);
 
 ShardsVue.install(Vue);
-Vue.component('default-layout', Default);
+Vue.component('default-layout', DefaultLayout);
 Vue.config.productionTip = false;
 
 // Axios configurable
@@ -83,7 +83,8 @@ Axios.interceptors.response.use((response) => {
       message.error('Something went wrong');
     }
   } else {
-    this.message.error('Unknown error, Please check your Internet connection');
+    message.error('Unknown error, Please check your Internet connection');
+    router.push('/login')
   }
   return Promise.reject(error.response.data)
 });

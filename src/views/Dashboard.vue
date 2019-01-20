@@ -21,11 +21,10 @@
     name: "Dashboard",
     methods: {
       test_api(){
-        this.$axios.get('hello').then(response => {
+        this.$axios.get('who').then(response => {
           let res = response.data;
-          console.log('a');
           if (res['status'] === 'success') {
-            this.$message.success(res.message);
+            this.$message.success(res.data['username']);
             console.log(res);
           } else {
             this.$message.error(res.message);

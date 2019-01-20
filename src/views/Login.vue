@@ -13,7 +13,7 @@
           <d-card>
             <!-- Card Header -->
             <d-card-header class="border-bottom text-center">
-              <h5 class="m-0">Access Your Account</h5>
+              <h5 class="m-0"><i class="material-icons">security</i>&nbsp;&nbsp;Access Your Account</h5>
             </d-card-header>
 
             <d-list-group flush>
@@ -23,7 +23,7 @@
                     <d-form>
                       <d-form-row>
                         <d-col md="12" class="form-group">
-                          <label>Username</label>
+                          <label><font size="2">Username</font></label>
                           <d-form-input
                               v-model="loginData.username"
                               type="text"
@@ -33,7 +33,7 @@
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group">
-                          <label>Password</label>
+                          <label><font size="2">Password</font></label>
                           <d-form-input
                               v-model="loginData.password"
                               type="password"
@@ -43,12 +43,18 @@
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group mx-1">
-                          <d-checkbox v-model="loginData.expiration">Remember me for 15 days.</d-checkbox>
+                          <d-checkbox v-model="loginData.expiration">
+                            <font size="2">Remember me for 15 days.</font>
+                          </d-checkbox>
                         </d-col>
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group">
-                          <Button @click="login" type="primary" shape="circle"> Access Account</Button>
+                          <Button @click="login" type="primary" shape="circle">
+                            <i class="material-icons">reply</i>
+                            &nbsp;
+                            Access Account
+                          </Button>
                         </d-col>
                       </d-form-row>
                     </d-form>

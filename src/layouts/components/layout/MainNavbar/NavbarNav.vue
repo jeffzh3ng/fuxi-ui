@@ -35,7 +35,7 @@
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle text-nowrap px-3" v-d-toggle.user-actions>
-        <img class="user-avatar rounded-circle mr-2" src="@/assets/images/avatars/0.jpg" alt="User Avatar"> <span class="d-none d-md-inline-block">Sierra Brooks</span>
+        <img class="user-avatar rounded-circle mr-2" src="@/assets/images/avatars/0.jpg" alt="User Avatar"> <span class="d-none d-md-inline-block">{{username}}</span>
       </a>
       <d-collapse id="user-actions" class="dropdown-menu dropdown-menu-small">
         <d-dropdown-item><i class="material-icons">&#xE7FD;</i> Profile</d-dropdown-item>
@@ -53,6 +53,21 @@
 <script>
   export default {
     name: 'NavbarNac',
+    data() {
+      return {
+        username: "No one",
+      }
+    },
+    mounted: function () {
+      this.$axios.get('who').then(response => {
+        let res = response.data;
+        if (res['status'] === 'success') {
+          this.username = res.data['nick'];
+        } else {
+          this.$message.error(res.message);
+        }
+      })
+    },
     methods: {
       logout() {
         window.localStorage.removeItem('access_token');
@@ -60,8 +75,8 @@
       }
     },
   }
-
 </script>
+
 <style>
   .nav-link:hover {
     cursor: pointer;

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 // DefaultContainer
-import DefaultContainer from './layouts/Default.vue';
+import DefaultContainer from './layouts/DefaultLayout.vue';
 
 // Login
 import Login from './views/Login.vue';
