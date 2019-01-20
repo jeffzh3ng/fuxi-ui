@@ -14,7 +14,8 @@
     "shards-ui": "^2.1.0",
     "shards-vue": "^1.0.4",
     "vue": "^2.5.17",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "axios": "latest"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.1.0",

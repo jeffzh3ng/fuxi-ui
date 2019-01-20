@@ -10,6 +10,7 @@
     <d-row>
       <d-col lg="12">
         <a>this is dashboard page</a>
+        <Button @click="test_api">测试接口</Button>
       </d-col>
     </d-row>
   </d-container>
@@ -17,7 +18,22 @@
 
 <script>
   export default {
-    name: "Dashboard"
+    name: "Dashboard",
+    methods: {
+      test_api(){
+        this.$axios.get('hello').then(response => {
+          let res = response.data;
+          console.log('a');
+          if (res['status'] === 'success') {
+            this.$message.success(res.message);
+            console.log(res);
+          } else {
+            this.$message.error(res.message);
+            console.log(res);
+          }
+        })
+      }
+    }
   }
 </script>
 

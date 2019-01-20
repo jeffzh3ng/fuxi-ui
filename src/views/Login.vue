@@ -24,23 +24,31 @@
                       <d-form-row>
                         <d-col md="12" class="form-group">
                           <label>Username</label>
-                          <d-form-input type="text" placeholder="Username" />
+                          <d-form-input
+                              v-model="loginData.username"
+                              type="text"
+                              placeholder="Username"
+                              @keyup.enter.native="login"/>
                         </d-col>
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group">
                           <label>Password</label>
-                          <d-form-input type="text" placeholder="Password"/>
+                          <d-form-input
+                              v-model="loginData.password"
+                              type="password"
+                              placeholder="Password"
+                              @keyup.enter.native="login"/>
                         </d-col>
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group mx-1">
-                          <d-checkbox>Remember me for 30 days.</d-checkbox>
+                          <d-checkbox v-model="loginData.expiration">Remember me for 15 days.</d-checkbox>
                         </d-col>
                       </d-form-row>
                       <d-form-row>
-                        <d-col md="12" class="form-group ">
-                          <d-button type="primary" shape="circle"> Access Account</d-button>
+                        <d-col md="12" class="form-group">
+                          <Button @click="login" type="primary" shape="circle"> Access Account</Button>
                         </d-col>
                       </d-form-row>
                     </d-form>
@@ -57,25 +65,35 @@
 
 <script>
   export default {
-    name: 'Register'
+    name: 'Login',
+    data() {
+      return {
+        loginData: {
+          username: '',
+          password: '',
+          expiration: false
+        },
+      }
+    },
+    methods: {
+      login(){
+        this.$axios.post("token", this.loginData).then(response => {
+          let loginRes = response.data;
+          if(loginRes.status === "success") {
+            this.$message.success(loginRes['message']);
+            localStorage.setItem('access_token', loginRes['data']);
+            if (localStorage.getItem('access_token')) {
+              this.$router.push('/');
+            } else {
+              this.$message.error("Set token error")
+            }
+          } else {
+            this.$message.error(loginRes.message)
+          }
+        })
+      }
+    }
   }
 </script>
 <style scoped>
-  .cardBule {
-    overflow: hidden;
-    -webkit-box-shadow: inset 0 4px 0 0 #007bff;
-    box-shadow: inset 0 4px 0 0 #007bff;
-    border-radius: .625rem;
-  }
-  .card-body {
-    /* overflow: hidden; */
-    /* -webkit-box-shadow: inset 0 4px 0 0 #007bff; */
-    box-shadow: inset 0 4px 0 0 #007bff;
-    border-radius: 0.625rem;
-    border: 1rem;
-    padding: 1.875rem;
-    -ms-flex: 1 1 auto;
-    -webkit-box-flex: 1;
-    flex: 1 1 auto;
-  }
 </style>

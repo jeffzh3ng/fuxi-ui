@@ -26,12 +26,12 @@ import 'iview/dist/styles/iview.css';
 // Core
 import App from './App.vue';
 import router from './router';
+import Axios from 'axios'
 
 // Layouts
 import Default from './layouts/Default.vue';
 
 // Vue.use(iView);
-
 Vue.component('Button', button);
 Vue.component('Table', table);
 Vue.component('Icon', icon);
@@ -44,14 +44,52 @@ Vue.component('Checkbox', checkbox);
 Vue.component('CheckboxGroup', checkboxGroup);
 Vue.component('Slider', slider);
 Vue.component('Transfer', transfer);
-Vue.prototype.$message = message;
-
 
 ShardsVue.install(Vue);
-// Vue.use(iView);
 Vue.component('default-layout', Default);
-
 Vue.config.productionTip = false;
+
+// Axios configurable
+let apiPath = window.location.protocol + "//" + window.location.host.split(':')[0] + ":50010/api/v1"; // 测试环境
+// let apiPath = window.location.protocol + "//" + window.location.host + "/api/v1"; // 生产环境
+Axios.defaults.baseURL = apiPath;
+Axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      config.headers['Access-Token']  = token;
+    }
+    config.headers['Access-Control-Allow-Origin'] = '*';
+    config.headers['Access-Control-Allow-Headers'] = '*';
+    config.headers['Access-Control-Allow-Credentials'] = 'true';
+    return config;
+  },
+  err => {
+    return Promise.reject(err);
+  });
+
+Axios.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  if (error.response) {
+    let status_code = error.response.status;
+    if (status_code === 401) {
+      window.localStorage.removeItem('access_token');
+      message.error('The access token expired');
+      router.push('/login')
+    } else if (status_code === 500) {
+      message.error('500 Internal Server Error');
+    } else {
+      message.error('Something went wrong');
+    }
+  } else {
+    this.message.error('Unknown error, Please check your Internet connection');
+  }
+  return Promise.reject(error.response.data)
+});
+
+Vue.prototype.$axios = Axios;
+Vue.prototype.$message = message;
 Vue.prototype.$eventHub = new Vue();
 
 new Vue({
