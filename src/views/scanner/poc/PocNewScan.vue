@@ -35,15 +35,15 @@
                     <Option value="0">Once</Option>
                     <Option value="1">Every day</Option>
                     <Option value="7">Every week</Option>
-                    <Option value="7">Every month</Option>
+                    <Option value="30">Every month</Option>
                   </Select>
                 </FormItem>
                 <FormItem label="扫描插件" prop="plugin">
                   <Transfer
-                      class=".ivu-transfer-list-body-search-wrapper"
-                      :data="data2"
-                      :target-keys="newScanData.plugin"
+                      :data="pocList"
+                      :target-keys="pluginSelect"
                       filterable
+                      :list-style="listStyle"
                       filter-placeholder="筛选"
                       :titles="['POC 列表','已选 POC']"
                       :filter-method="filterMethod"
@@ -60,13 +60,10 @@
                   <Slider v-model="newScanData.thread" :max=50 show-input></Slider>
                 </FormItem>
                 <FormItem label="其他配置" prop="interest">
-                  <CheckboxGroup v-model="newScanData.other">
-                    <Checkbox label="扫描完成通知"></Checkbox>
-                    <Checkbox label="其他"></Checkbox>
-                  </CheckboxGroup>
+                  <Checkbox v-model="newScanData.other"> 扫描完成通知</Checkbox>
                 </FormItem>
                 <FormItem>
-                  <Button type="primary">创建任务</Button>
+                  <Button type="primary" @click="createScanTask">创建任务</Button>
                 </FormItem>
               </Form>
             </d-col>
@@ -88,6 +85,7 @@
                   <d-col md="12" class="form-group">
                     <label><font size="2">* 设置目标</font></label>
                     <Input
+                        v-model="quickScanData.target"
                         type="textarea"
                         :autosize="{minRows: 3,maxRows: 5}"
                         placeholder="Enter target..."/>
@@ -96,16 +94,12 @@
                 <d-form-row>
                   <d-col md="12" class="form-group">
                     <label><font size="2">* 选择 POC</font></label>
-                    <Select multiple filterable placeholder="选择插件">
-                      <Option value="aa">大声a点撒大接口是你测试adasda</Option>
-                      <Option value="bb">大声阿斯顿撒大点a</Option>
-                      <Option value="cc">大撒打算大声点b</Option>
-                      <Option value="dd">大撒打算大声大是dvsds点b</Option>
-                      <Option value="ee">大撒打算大 大撒撒打算声点b</Option>
-                      <Option value="ff">大撒打算大声阿 dasd 去点b</Option>
-                      <Option value="gg">大撒打算大声阿asda dasd 去点b</Option>
-                      <Option value="ads">大撒打算大声阿asda dasd 去点b</Option>
-                      <Option value="adsa">das dasd 去点b</Option>
+                    <Select
+                        v-model="quickPluginSelect"
+                        multiple
+                        filterable
+                        placeholder="选择插件">
+                        <Option v-for="item in pocList" :value="item.key">{{ item.label }}</Option>
                     </Select>
                   </d-col>
                 </d-form-row>
@@ -117,7 +111,7 @@
                 <br>
                 <d-form-row>
                   <d-col md="12" class="form-group ">
-                    <Button type="primary" shape="circle"><Icon type="ios-flash-outline" size="18"/> 快速扫描</Button>
+                    <Button @click="quickScan" type="primary" shape="circle"><Icon type="ios-flash-outline" size="18"/> 快速扫描</Button>
                   </d-col>
                 </d-form-row>
               </d-form>
@@ -131,21 +125,30 @@
 
 <script>
   export default {
-    name: "AliothNewScan",
+    name: "PocNewScan",
     data () {
       return {
-        data2: [
-          { "key": "1", "label": "Content 1"},
-          { "key": "2", "label": "Content 2"},
-        ],
+        listStyle: {
+          width: '200px',
+          height: '250px'
+        },
+        pocList: [],
         newScanData: {
           name: "",
           target: "",
           cycle: "0",
           thread: 20,
-          plugin: [],
-          other: [],
+          poc_id: "",
+          poc_name: "",
+          other: false,
         },
+        quickScanData: {
+          target: "",
+          poc_id: "",
+          poc_name: "",
+        },
+        quickPluginSelect: [],
+        pluginSelect: [],
         ruleScanDate: {
           name: [
             {required: true, message: 'Task name cannot be empty', trigger: 'blur'}
@@ -162,12 +165,70 @@
         }
       }
     },
+    mounted: function () {
+      this.$axios.get('scanner/poc/plugins').then(response => {
+        let resPlugin = response.data;
+        if (resPlugin['status'] === 'success') {
+          for (let i=0;i<resPlugin.data.length; i++) {
+            this.pocList.push({"key": resPlugin.data[i]['pid'], "label": resPlugin.data[i]['name']})
+          }
+        } else {
+          this.$message.error(resPlugin.message);
+        }
+      })
+    },
     methods: {
       handleChange2 (newTargetKeys) {
-        this.newScanData.plugin = newTargetKeys;
+        this.pluginSelect = newTargetKeys;
       },
       filterMethod (data, query) {
         return data.label.indexOf(query) > -1;
+      },
+      createScanTask(){
+        let poc_name = [];
+        for (let i=0; i<this.pocList.length; i++) {
+          if (this.pluginSelect.indexOf(this.pocList[i]['key']) !==-1) {
+            poc_name.push(this.pocList[i]['label'])
+          }
+        }
+        this.newScanData['poc_name'] = poc_name.join("\n");
+        this.newScanData['poc_id'] = this.pluginSelect.join("\n");
+        if (this.newScanData['name'].length !== 0 &&
+          this.newScanData['poc_id'].length !== 0 &&
+          this.newScanData['poc_name'].length !== 0 &&
+          this.newScanData['target'].length !== 0) {
+          this.$Modal.confirm({
+            title: 'CONFIRM',
+            content: 'Are you sure to add a new scan task?',
+            closable: true,
+            okText: 'OK',
+            cancelText: 'Cancel',
+            onOk: () => {
+              this.$axios.post("scanner/poc/task", this.newScanData).then(response => {
+                let resNewTask = response.data;
+                if(resNewTask.status === "success") {
+                  this.$message.success(resNewTask['message']);
+                  this.$router.push('/scanner/poc/scans');
+                } else {
+                  this.$message.error(resNewTask['message'])
+                }
+              })
+            }
+          });
+        } else {
+          this.$message.error(" Please check input data")
+        }
+      },
+      quickScan(){
+        let poc_name = [];
+        for (let i=0; i<this.pocList.length; i++) {
+          if (this.quickPluginSelect.indexOf(this.pocList[i]['key']) !== -1) {
+            poc_name.push(this.pocList[i]['label'])
+          }
+        }
+        this.quickScanData['poc_name'] = poc_name.join("\n");
+        this.quickScanData['poc_id'] = this.quickPluginSelect.join("\n");
+        console.log(this.quickScanData)
       }
     }
   }

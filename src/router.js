@@ -11,8 +11,9 @@ import Login from './views/Login.vue';
 import Dashboard from './views/Dashboard.vue';
 
 // scanner
-import AliothNewScan from './views/scanner/alioth/AliothNewScan'
-import AliothScans from './views/scanner/alioth/AliothScans'
+import PocNewScan from './views/scanner/poc/PocNewScan'
+import PocScans from './views/scanner/poc/PocScans'
+import PocPluginList from './views/scanner/poc/PocPluginList'
 import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 
 // information gathering
@@ -43,14 +44,19 @@ export default new Router({
 
         // scanner
         {
-          path: '/scanner/alioth/new_scan',
-          name: 'AliothNewScan',
-          component: AliothNewScan,
+          path: '/scanner/poc/new_scan',
+          name: 'PocNewScan',
+          component: PocNewScan,
         },
         {
-          path: '/scanner/alioth/scans',
-          name: 'AliothScans',
-          component: AliothScans,
+          path: '/scanner/poc/scans',
+          name: 'PocScans',
+          component: PocScans,
+        },
+        {
+          path: '/scanner/poc/plugin',
+          name: 'PocPluginList',
+          component: PocPluginList,
         },
         {
           path: '/scanner/nessus/new_scan',

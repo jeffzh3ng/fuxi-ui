@@ -10,19 +10,24 @@ export default function () {
       tag: true,
     },
     {
-      title: 'Alioth Scanner',
+      title: 'PoC Scanner',
       icon: 'filter_center_focus',
       items: [
         {
           title: '新建任务',
           icon: 'add',
-          to: { name: 'AliothNewScan' },
+          to: { name: 'PocNewScan' },
         },
         {
           title: '任务列表',
           icon: 'list',
-          to: { name: 'AliothScans' }
-        }
+          to: { name: 'PocScans' }
+        },
+        {
+          title: '插件管理',
+          icon: 'list',
+          to: { name: 'PocPluginList' }
+        },
       ],
     },
     {

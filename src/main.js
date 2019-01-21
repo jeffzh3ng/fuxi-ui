@@ -15,6 +15,11 @@ import {
   Checkbox as checkbox,
   Slider as slider,
   Transfer as transfer,
+  Page as page,
+  Tooltip as tooltip,
+  Modal as modal,
+  Upload as upload,
+  Spin as spin,
 } from 'iview';
 
 // Styles
@@ -44,6 +49,11 @@ Vue.component('Checkbox', checkbox);
 Vue.component('CheckboxGroup', checkboxGroup);
 Vue.component('Slider', slider);
 Vue.component('Transfer', transfer);
+Vue.component('Page', page);
+Vue.component('Tooltip', tooltip);
+Vue.component('Modal', modal);
+Vue.component('Upload', upload);
+Vue.component('Spin', spin);
 
 ShardsVue.install(Vue);
 Vue.component('default-layout', DefaultLayout);
@@ -91,7 +101,10 @@ Axios.interceptors.response.use((response) => {
 
 Vue.prototype.$axios = Axios;
 Vue.prototype.$message = message;
+Vue.prototype.$Modal = modal;
+message.config({duration: 2.5});
 Vue.prototype.$eventHub = new Vue();
+Vue.prototype.apiPath = apiPath;
 
 new Vue({
   router,
