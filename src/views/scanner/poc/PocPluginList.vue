@@ -60,10 +60,10 @@
                     <td>{{ item.author }}</td>
                     <td>{{ item.date }}</td>
                     <td class="text-center">
-                      <Tooltip placement="top" content="Get detail" theme="light">
+                      <Tooltip placement="top" content="Detail" theme="light">
                         <Icon @click="getPocDetail(item.pid)" title="get code" size="21" type="md-code" class="mr-2" />
                       </Tooltip>
-                      <Tooltip placement="top" content="Delete" theme="light">
+                      <Tooltip placement="top" content="Trash" theme="light">
                         <Icon @click="deletePoC(item.pid)" title="delete poc" size="21" type="md-trash" />
                       </Tooltip>
                     </td>

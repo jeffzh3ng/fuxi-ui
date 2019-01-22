@@ -106,6 +106,13 @@ message.config({duration: 2.5});
 Vue.prototype.$eventHub = new Vue();
 Vue.prototype.apiPath = apiPath;
 
+// 全局过滤器 开头字母变大写
+Vue.filter('capitalize', function (value) {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1)
+});
+
 new Vue({
   router,
   render: h => h(App),

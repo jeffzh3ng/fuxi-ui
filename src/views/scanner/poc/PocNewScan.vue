@@ -24,42 +24,42 @@
                   :rules="ruleScanDate"
                   label-position="left"
                   :label-width="100">
-                <FormItem label="任务名称" prop="name">
+                <FormItem label="Name" prop="name">
                   <Input v-model="newScanData.name" placeholder="Enter your name"></Input>
                 </FormItem>
-                <FormItem label="扫描周期" prop="cycle">
+                <FormItem label="Frequency" prop="freq">
                   <Select
                       style="width:150px"
-                      v-model="newScanData.cycle"
+                      v-model="newScanData.freq"
                       placeholder="选择扫描周期">
-                    <Option value="0">Once</Option>
-                    <Option value="1">Every day</Option>
-                    <Option value="7">Every week</Option>
-                    <Option value="30">Every month</Option>
+                    <Option value="once">Once</Option>
+                    <Option value="daily">Every day</Option>
+                    <Option value="weekly">Every week</Option>
+                    <Option value="monthly">Every month</Option>
                   </Select>
                 </FormItem>
-                <FormItem label="扫描插件" prop="plugin">
+                <FormItem label="PoC" prop="plugin">
                   <Transfer
                       :data="pocList"
                       :target-keys="pluginSelect"
                       filterable
                       :list-style="listStyle"
-                      filter-placeholder="筛选"
-                      :titles="['POC 列表','已选 POC']"
+                      filter-placeholder="Filter"
+                      :titles="['PoC List','Selected']"
                       :filter-method="filterMethod"
                       @on-change="handleChange2"></Transfer>
                 </FormItem>
-                <FormItem label="扫描对象" prop="target">
+                <FormItem label="Target" prop="target">
                   <Input
                       type="textarea"
                       :autosize="{minRows: 5,maxRows: 7}"
                       v-model="newScanData.target"
-                      placeholder="Enter your target"></Input>
+                      :placeholder="targetPlaceholder"></Input>
                 </FormItem>
-                <FormItem label="扫描并发">
+                <FormItem label="Thread">
                   <Slider v-model="newScanData.thread" :max=50 show-input></Slider>
                 </FormItem>
-                <FormItem label="其他配置" prop="interest">
+                <FormItem label="Notification" prop="interest">
                   <Checkbox v-model="newScanData.other"> 扫描完成通知</Checkbox>
                 </FormItem>
                 <FormItem>
@@ -115,6 +115,20 @@
                   </d-col>
                 </d-form-row>
               </d-form>
+              <Modal
+                  :styles="{top: '30px'}"
+                  footer-hide
+                  width="600"
+                  v-model="getQuickScanResModal"
+                  :title="quickModalTitle">
+                <div>
+                  <Spin fix v-if="quickModalSpinShow">
+                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+                    <div>Quick scanning</div>
+                  </Spin>
+                  <pre>{{quickResult}}</pre>
+                </div>
+              </Modal>
             </d-col>
           </d-row>
         </d-card>
@@ -128,6 +142,7 @@
     name: "PocNewScan",
     data () {
       return {
+        getQuickScanResModal: false,
         listStyle: {
           width: '200px',
           height: '250px'
@@ -136,7 +151,7 @@
         newScanData: {
           name: "",
           target: "",
-          cycle: "0",
+          freq: "once",
           thread: 20,
           poc_id: "",
           poc_name: "",
@@ -153,16 +168,20 @@
           name: [
             {required: true, message: 'Task name cannot be empty', trigger: 'blur'}
           ],
-          cycle: [
-            {required: true, message: 'Target cannot be empty', trigger: 'blur'}
-          ],
           target: [
             {required: true, message: 'Target cannot be empty', trigger: 'blur'}
           ],
           plugin: [
             {required: true, message: 'POC cannot be empty', trigger: 'blur'}
           ],
-        }
+        },
+        targetPlaceholder: "Example:\n" +
+          "192.168.1.1\n" +
+          "192.168.2.0/24\n" +
+          "test.com",
+        quickResult: "",
+        quickModalTitle: "",
+        quickModalSpinShow: true
       }
     },
     mounted: function () {
@@ -228,14 +247,39 @@
         }
         this.quickScanData['poc_name'] = poc_name.join("\n");
         this.quickScanData['poc_id'] = this.quickPluginSelect.join("\n");
-        console.log(this.quickScanData)
+        this.quickModalTitle = this.quickScanData['target'] + " - " + this.quickScanData['poc_name'];
+        this.quickModalSpinShow = true;
+        this.quickResult = "";
+        this.getQuickScanResModal = true;
+
+        this.$axios.post("scanner/poc/scan", this.quickScanData).then(response => {
+          let res = response.data;
+          if(res.status === "success") {
+            this.quickResult = res['data'];
+            this.quickModalSpinShow = false
+          } else {
+            this.quickResult = res['message'];
+            this.$message.error(res['message']);
+            this.quickModalSpinShow = false
+          }
+        })
       }
     }
   }
 </script>
 
 <style>
-  .ivu-transfer-list-body-search-wrapper {
-    padding: 15px 8px 0;
+  .demo-spin-icon-load{
+    animation: ani-demo-spin 1s linear infinite;
+  }
+  @keyframes ani-demo-spin {
+    from { transform: rotate(0deg);}
+    50%  { transform: rotate(180deg);}
+    to   { transform: rotate(360deg);}
+  }
+  .demo-spin-col{
+    height: 100px;
+    position: relative;
+    border: 1px solid #eee;
   }
 </style>

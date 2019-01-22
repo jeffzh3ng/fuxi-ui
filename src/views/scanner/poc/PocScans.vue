@@ -22,11 +22,11 @@
                 <tr>
                   <th scope="col" class="border-0 text-center">#</th>
                   <th scope="col" class="border-0">Task Name</th>
-                  <th scope="col" class="border-0">Cycle</th>
-                  <th scope="col" class="border-0">Status</th>
-                  <th scope="col" class="border-0">Vul Count</th>
+                  <th scope="col" class="border-0 text-center">Frequency</th>
+                  <th scope="col" class="border-0 text-center">Status</th>
+                  <th scope="col" class="border-0 text-center">Vul Count</th>
                   <th scope="col" class="border-0">Start Date</th>
-                  <th scope="col" class="border-0">End Date</th>
+                  <th scope="col" class="border-0">Last Modified</th>
                   <th scope="col" class="border-0 text-center">Action</th>
                 </tr>
                 </thead>
@@ -34,13 +34,13 @@
                 <tr v-for="(item, index) in taskItems">
                   <td class="text-center">{{ index + 1 }}</td>
                   <td>{{ item.name }}</td>
-                  <td>{{ item.cycle }}</td>
-                  <td>{{ item.status }}</td>
-                  <td>{{ item.vul_count }}</td>
+                  <td class="text-center">{{ item.freq | capitalize }}</td>
+                  <td class="text-center">{{ item.status | capitalize }}</td>
+                  <td class="text-center">{{ item.vul_count }}</td>
                   <td>{{ item.date }}</td>
                   <td>{{ item.end_date }}</td>
                   <td class="text-center">
-                    <Tooltip placement="top" content="Delete" theme="light">
+                    <Tooltip placement="top" content="Trash" theme="light">
                       <Icon @click="deleteTask(item.tid)" title="delete poc" size="21" type="md-trash" />
                     </Tooltip>
                   </td>
