@@ -1,40 +1,37 @@
 <template>
   <div>
-    <div>
-        <div class="row p-1">
-          <div class="col-2">
-          <Input
-              size="small"
-              v-model="keyword"
-              @keyup.enter.native="searchRes"
-              suffix="ios-search"
-              placeholder="Search"
-              style="width: auto" />
-          </div>
-          <div class="col-10">
-            <p><strong><font size="1">数据接收方式</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
-          </div>
-        </div>
-        <div>
-          <Spin size="large" fix v-if="spinShow"></Spin>
-          <Table :columns="columns" :data="httpLogItems">
-            <template slot="action" slot-scope="{ row }">
-              <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
-            </template>
-          </Table>
-        </div>
-        <Page
-            class="p-2"
-            :total="getRowCount(items)"
-            show-elevator
-            show-total
-            show-sizer
-            :page-size="pageSize"
-            @on-page-size-change="sizeChange"
-            @on-change="pageChange"/>
+    <div class="row p-1">
+      <div class="col-2">
+        <Input
+            size="small"
+            v-model="keyword"
+            @keyup.enter.native="searchRes"
+            suffix="ios-search"
+            placeholder="Search"
+            style="width: auto" />
       </div>
+      <div class="col-10">
+        <p><strong><font size="1">数据接收方式</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
+      </div>
+    </div>
+    <div>
+      <Spin size="large" fix v-if="spinShow"></Spin>
+      <Table :columns="columns" :data="httpLogItems">
+        <template slot="action" slot-scope="{ row }">
+          <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
+        </template>
+      </Table>
+    </div>
+    <Page
+        class="p-2"
+        :total="getRowCount(items)"
+        show-elevator
+        show-total
+        show-sizer
+        :page-size="pageSize"
+        @on-page-size-change="sizeChange"
+        @on-change="pageChange"/>
   </div>
-
 </template>
 
 <script>
