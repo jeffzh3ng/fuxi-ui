@@ -13,7 +13,7 @@
         <d-card class="card-small mb-12">
           <!-- Card Header -->
           <d-card-header class="border-bottom">
-            <h5 class="m-0">创建任务</h5>
+            <h5 class="m-0">New scan</h5>
           </d-card-header>
           <br>
           <d-row class="justify-content-center">
@@ -74,7 +74,7 @@
         <d-card class="card-small mb-12">
           <!-- Card Header -->
           <d-card-header class="border-bottom">
-            <h5 class="m-0">快速检测</h5>
+            <h5 class="m-0">Quick Scan</h5>
             <span><font size="1">设置目标及 POC 进行一次临时检测</font></span>
           </d-card-header>
           <br>
