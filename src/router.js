@@ -14,10 +14,13 @@ import Dashboard from './views/Dashboard.vue';
 import PocNewScan from './views/scanner/poc/PocNewScan'
 import PocScans from './views/scanner/poc/PocScans'
 import PocPluginList from './views/scanner/poc/PocPluginList'
+import PocVulList from './views/scanner/poc/PocVulList'
+
 import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 
-// information gathering
-import DomainBuster from './views/info/subdomain/DomainBuster'
+// Discovery & information gathering
+import DiscoveryTask from './views/discovery/DiscoveryTask'
+import AssetsSearch from './views/discovery/AssetsSearch'
 
 
 Vue.use(Router);
@@ -59,15 +62,32 @@ export default new Router({
           component: PocPluginList,
         },
         {
+          path: '/scanner/poc/vuls',
+          name: 'PocVulList',
+          component: PocVulList,
+        },
+        {
+          path: '/scanner/poc/vul/:tid',
+          name: 'PocVulListFilter',
+          component: PocVulList,
+        },
+        {
           path: '/scanner/nessus/new_scan',
           name: 'NessusNewScan',
           component: NessusNewScan,
         },
 
         {
-          path: '/info/subdomain',
-          name: 'DomainBuster',
-          component: DomainBuster,
+          path: '/assets/search',
+          name: 'AssetsSearch',
+          component: AssetsSearch,
+        },
+
+
+        {
+          path: '/discovery',
+          name: 'DiscoveryTask',
+          component: DiscoveryTask,
         },
       ]
     },

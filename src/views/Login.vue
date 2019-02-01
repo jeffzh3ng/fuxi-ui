@@ -50,7 +50,7 @@
                       </d-form-row>
                       <d-form-row>
                         <d-col md="12" class="form-group">
-                          <Button @click="login" type="primary" shape="circle">
+                          <Button @click="login" type="primary" :loading="loading" shape="circle">
                             <i class="material-icons">reply</i>
                             &nbsp;
                             Access Account
@@ -74,6 +74,7 @@
     name: 'Login',
     data() {
       return {
+        loading: false,
         loginData: {
           username: '',
           password: '',
@@ -83,20 +84,22 @@
     },
     methods: {
       login(){
+        this.loading = true;
         this.$axios.post("token", this.loginData).then(response => {
           let loginRes = response.data;
           if(loginRes.status === "success") {
             this.$message.success(loginRes['message']);
-            localStorage.setItem('access_token', loginRes['data']);
+            localStorage.setItem('access_token', loginRes['data']['token']);
             if (localStorage.getItem('access_token')) {
               this.$router.push('/');
             } else {
               this.$message.error("Set token error")
             }
           } else {
-            this.$message.error(loginRes.message)
+            this.$message.error(loginRes.message);
+            this.loading = false;
           }
-        })
+        });
       }
     }
   }

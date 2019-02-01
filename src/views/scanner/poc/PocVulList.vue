@@ -4,8 +4,8 @@
     <d-row no-gutters class="page-header py-4">
       <!-- Page Title -->
       <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
-        <span class="text-uppercase page-subtitle">POC Tasks Management</span>
-        <h3 class="page-title">PoC Task List</h3>
+        <span class="text-uppercase page-subtitle">POC scan result</span>
+        <h3 class="page-title">Vulnerabilities</h3>
       </d-col>
     </d-row>
     <div class="row">
@@ -26,29 +26,27 @@
                 <thead class="bg-light">
                 <tr>
                   <th scope="col" class="border-0 text-center">#</th>
-                  <th scope="col" class="border-0">Task Name</th>
-                  <th scope="col" class="border-0 text-center">Frequency</th>
+                  <th scope="col" class="border-0">PoC Name</th>
+                  <th scope="col" class="border-0 text-center">Target</th>
+                  <th scope="col" class="border-0 text-center">Task Name</th>
                   <th scope="col" class="border-0 text-center">Status</th>
-                  <th scope="col" class="border-0 text-center">Vul Count</th>
-                  <th scope="col" class="border-0">Start Date</th>
-                  <th scope="col" class="border-0">Last Modified</th>
+                  <th scope="col" class="border-0 text-center">App</th>
+                  <th scope="col" class="border-0">Date</th>
                   <th scope="col" class="border-0 text-center">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(item, index) in taskItems">
+                <tr v-for="(item, index) in vulItems">
                   <td class="text-center">{{ index + 1 }}</td>
-                  <td><a
-                      style="text-decoration:none;color:#42b983;"
-                      @click="scanResFilter(item.tid)">{{ item.name }}</a></td>
-                  <td class="text-center">{{ item.freq | capitalize }}</td>
-                  <td class="text-center">{{ item.status | capitalize }}</td>
-                  <td class="text-center">{{ item.vul_count }}</td>
+                  <td>{{ item.poc_name }}</td>
+                  <td class="text-center">{{ item.target}}</td>
+                  <td class="text-center">{{ item.task_name }}</td>
+                  <td class="text-center">{{ item.status }}</td>
+                  <td class="text-center">{{ item.app }}</td>
                   <td>{{ item.date }}</td>
-                  <td>{{ item.end_date }}</td>
                   <td class="text-center">
                     <Tooltip placement="top" content="Trash" theme="light">
-                      <Icon @click="deleteTask(item.tid)" title="delete poc" size="21" type="md-trash" />
+                      <Icon @click="deleteVul(item.vid)" title="delete poc" size="21" type="md-trash" />
                     </Tooltip>
                   </td>
                 </tr>
@@ -74,25 +72,31 @@
 
 <script>
   export default {
-    name: "PocScans",
+    name: "PocVulList",
     data() {
       return {
         spinShow: true,
         items: [],
-        taskItems: [],
+        vulItems: [],
         pageSize: 10,
         pageCurrent: 1,
-        keyword: ""
+        taskID: "",
+        keyword: "",
       }
     },
     mounted() {
-      this.$axios.get("scanner/poc/tasks").then(response => {
+      this.taskID = this.$route.params.tid;
+      let resource_url = "scanner/poc/vuls";
+      if (this.taskID) {
+        resource_url = "scanner/poc/vuls/tid_" + this.taskID
+      }
+      this.$axios.get(resource_url).then(response => {
         let res = response.data;
         if (res['status'] === 'success') {
           this.items = res['data'];
           let _start = ( this.pageCurrent - 1 ) * this.pageSize;
           let _end = this.pageCurrent * this.pageSize;
-          this.taskItems = this.items.slice(_start,_end);
+          this.vulItems = this.items.slice(_start,_end);
           this.spinShow = false;
         } else {
           this.$message.error(res['message'])
@@ -106,19 +110,16 @@
       pageChange(currentPage) {
         let _start = ( currentPage - 1 ) * this.pageSize;
         let _end = currentPage * this.pageSize;
-        this.taskItems = this.items.slice(_start,_end);
+        this.vulItems = this.items.slice(_start,_end);
         this.pageCurrent=currentPage;
       },
       sizeChange(index){
         this.pageSize = index;
         let _start = 0;
         let _end = this.pageSize;
-        this.taskItems = this.items.slice(_start,_end);
+        this.vulItems = this.items.slice(_start,_end);
       },
-      scanResFilter(tid){
-        window.open('#/scanner/poc/vul/' + tid, "_blank");
-      },
-      deleteTask(tid) {
+      deleteVul(tid) {
         this.$Modal.confirm({
           title: 'WARNING',
           content: 'Are you sure you want to delete this item?',
@@ -126,17 +127,17 @@
           okText: 'OK',
           cancelText: 'Cancel',
           onOk: () => {
-            this.$axios.delete('scanner/poc/task/' + tid).then(response => {
+            this.$axios.delete('scanner/poc/vul/' + tid).then(response => {
               let res = response.data;
               if (res['status'] === 'success') {
                 for (let i=0; i< this.items.length;i++){
-                  if (this.items[i]['tid'] === tid) {
+                  if (this.items[i]['vid'] === tid) {
                     this.items.splice(i,1);
                   }
                 }
                 let _start = ( this.pageCurrent - 1 ) * this.pageSize;
                 let _end = this.pageCurrent * this.pageSize;
-                this.taskItems = this.items.slice(_start,_end);
+                this.vulItems = this.items.slice(_start,_end);
                 this.$message.success(res.message);
               } else {
                 this.$message.error(res.message)
@@ -149,13 +150,17 @@
         });
       },
       searchRes() {
-        this.$axios.get("scanner/poc/tasks/" + this.keyword).then(response => {
+        let resource_url = "scanner/poc/vuls/key_" + this.keyword;
+        if (this.taskID) {
+          resource_url = "scanner/poc/vuls/all_" + this.taskID + "_" + this.keyword
+        }
+        this.$axios.get(resource_url).then(response => {
           let res = response.data;
           if (res['status'] === 'success') {
             this.items = res['data'];
             let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
-            this.taskItems = this.items.slice(_start,_end);
+            this.vulItems = this.items.slice(_start,_end);
             this.spinShow = false;
           } else {
             this.$message.error(res['message'])

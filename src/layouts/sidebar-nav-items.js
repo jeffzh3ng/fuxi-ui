@@ -6,7 +6,7 @@ export default function () {
       icon: 'multiline_chart',
     },
     {
-      title: '漏洞扫描',
+      title: 'Vulnerability Scanner',
       tag: true,
     },
     {
@@ -14,19 +14,24 @@ export default function () {
       icon: 'filter_center_focus',
       items: [
         {
-          title: '新建任务',
+          title: 'New scan',
           icon: 'add',
           to: { name: 'PocNewScan' },
         },
         {
-          title: '任务列表',
+          title: 'Tasks',
           icon: 'list',
           to: { name: 'PocScans' }
         },
         {
-          title: '插件管理',
+          title: 'Plugins',
           icon: 'list',
           to: { name: 'PocPluginList' }
+        },
+        {
+          title: 'Vulnerabilities',
+          icon: 'list',
+          to: { name: 'PocVulList' }
         },
       ],
     },
@@ -36,13 +41,18 @@ export default function () {
       icon: 'navigation',
     },
     {
-      title: '信息收集',
+      title: 'Information gathering',
       tag: true,
     },
     {
-      title: '子域名收集',
-      to: { name: 'DomainBuster' },
+      title: 'Discovery',
+      to: { name: 'DiscoveryTask' },
       icon: 'domain',
-    }
+    },
+    {
+      title: 'Search',
+      to: { name: 'AssetsSearch' },
+      icon: 'domain',
+    },
   ];
 }

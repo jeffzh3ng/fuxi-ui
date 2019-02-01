@@ -20,6 +20,10 @@ import {
   Modal as modal,
   Upload as upload,
   Spin as spin,
+  CellGroup as cellGroup,
+  Cell as cell,
+  Poptip as poptip,
+  Tag as tag,
 } from 'iview';
 
 // Styles
@@ -54,6 +58,10 @@ Vue.component('Tooltip', tooltip);
 Vue.component('Modal', modal);
 Vue.component('Upload', upload);
 Vue.component('Spin', spin);
+Vue.component('CellGroup', cellGroup);
+Vue.component('Cell', cell);
+Vue.component('Poptip', poptip);
+Vue.component('Tag', tag);
 
 ShardsVue.install(Vue);
 Vue.component('default-layout', DefaultLayout);

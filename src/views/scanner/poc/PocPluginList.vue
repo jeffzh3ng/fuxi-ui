@@ -12,7 +12,11 @@
       <div class="col">
         <div class="card card-small mb-4">
           <div class="card-header border-bottom">
-            <Input suffix="ios-search" placeholder="Search" style="width: auto" class="mr-3" />
+            <Input
+                v-model="keyword"
+                @keyup.enter.native="searchRes"
+                suffix="ios-search"
+                placeholder="Search" style="width: auto" class="mr-3" />
             <Button @click="addPocModal = true">
               <i class="material-icons">library_add</i>
               New PoC
@@ -49,7 +53,7 @@
                     <th scope="col" class="border-0">Type</th>
                     <th scope="col" class="border-0">Author</th>
                     <th scope="col" class="border-0">Date</th>
-                    <th scope="col" class="border-0 text-center">Action</th>
+                    <th scope="col" class="border-0 text-center">Actions</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -159,6 +163,9 @@
           if (resPlugin['status'] === 'success') {
             this.items = [];
             this.items = resPlugin['data'];
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.pluginItems = this.items.slice(_start,_end);
           } else {
             this.$message.error(resPlugin['message'])
           }
@@ -192,6 +199,20 @@
             this.$message.error(res.message)
           }
         });
+      },
+      searchRes() {
+        this.$axios.get("scanner/poc/plugins/" + this.keyword).then(response => {
+          let res = response.data;
+          if (res['status'] === 'success') {
+            this.items = res['data'];
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.pluginItems = this.items.slice(_start,_end);
+            this.spinShow = false;
+          } else {
+            this.$message.error(res['message'])
+          }
+        })
       }
     }
   }
