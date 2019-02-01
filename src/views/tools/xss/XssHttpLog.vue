@@ -1,24 +1,40 @@
 <template>
   <div>
     <div>
-      <Spin size="large" fix v-if="spinShow"></Spin>
-      <p class="p-1"><strong><font size="1">数据接收方式</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
-      <Table :columns="columns" :data="httpLogItems">
-        <template slot="action" slot-scope="{ row }">
-          <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
-        </template>
-      </Table>
-    </div>
-    <Page
-        class="p-2"
-        :total="getRowCount(items)"
-        show-elevator
-        show-total
-        show-sizer
-        :page-size="pageSize"
-        @on-page-size-change="sizeChange"
-        @on-change="pageChange"/>
+        <div class="row p-1">
+          <div class="col-2">
+          <Input
+              size="small"
+              v-model="keyword"
+              @keyup.enter.native="searchRes"
+              suffix="ios-search"
+              placeholder="Search"
+              style="width: auto" />
+          </div>
+          <div class="col-10">
+            <p><strong><font size="1">数据接收方式</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
+          </div>
+        </div>
+        <div>
+          <Spin size="large" fix v-if="spinShow"></Spin>
+          <Table :columns="columns" :data="httpLogItems">
+            <template slot="action" slot-scope="{ row }">
+              <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
+            </template>
+          </Table>
+        </div>
+        <Page
+            class="p-2"
+            :total="getRowCount(items)"
+            show-elevator
+            show-total
+            show-sizer
+            :page-size="pageSize"
+            @on-page-size-change="sizeChange"
+            @on-change="pageChange"/>
+      </div>
   </div>
+
 </template>
 
 <script>
@@ -31,6 +47,7 @@
         httpLogItems: [],
         pageSize: 10,
         pageCurrent: 1,
+        keyword: "",
         httpUsage: "http://" + window.location.host + "/http?data=your_data",
         columns: [
           {
@@ -114,6 +131,20 @@
             this.$message.error(res.message)
           }
         });
+      },
+      searchRes() {
+        this.$axios.get("tools/xss/httplog/search/" + this.keyword).then(response => {
+          let res = response.data;
+          if (res['status'] === 'success') {
+            this.items = res['data'];
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.httpLogItems = this.items.slice(_start,_end);
+            this.spinShow = false;
+          } else {
+            this.$message.error(res['message'])
+          }
+        })
       }
     }
   }
