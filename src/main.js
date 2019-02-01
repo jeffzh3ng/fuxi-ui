@@ -24,6 +24,8 @@ import {
   Cell as cell,
   Poptip as poptip,
   Tag as tag,
+  Tabs as tabs,
+  TabPane as tabPane,
 } from 'iview';
 
 // Styles
@@ -62,6 +64,8 @@ Vue.component('CellGroup', cellGroup);
 Vue.component('Cell', cell);
 Vue.component('Poptip', poptip);
 Vue.component('Tag', tag);
+Vue.component('Tabs', tabs);
+Vue.component('TabPane', tabPane);
 
 ShardsVue.install(Vue);
 Vue.component('default-layout', DefaultLayout);

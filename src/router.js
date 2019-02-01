@@ -22,6 +22,8 @@ import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 import DiscoveryTask from './views/discovery/DiscoveryTask'
 import AssetsSearch from './views/discovery/AssetsSearch'
 
+// Pentest tools
+import XssPlatform from './views/tools/xss/XssPlatform'
 
 Vue.use(Router);
 
@@ -75,6 +77,11 @@ export default new Router({
           path: '/scanner/nessus/new_scan',
           name: 'NessusNewScan',
           component: NessusNewScan,
+        },
+        {
+          path: '/tools/xss',
+          name: 'XssPlatform',
+          component: XssPlatform,
         },
 
         {

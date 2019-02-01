@@ -41,6 +41,15 @@ export default function () {
       icon: 'navigation',
     },
     {
+      title: 'Pentest tools',
+      tag: true,
+    },
+    {
+      title: 'XSS Platform',
+      to: { name: 'XssPlatform' },
+      icon: 'navigation',
+    },
+    {
       title: 'Information gathering',
       tag: true,
     },
