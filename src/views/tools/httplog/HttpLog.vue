@@ -1,37 +1,47 @@
 <template>
-  <div>
-    <div class="row p-1">
-      <div class="col-2">
-        <Input
-            size="small"
-            v-model="keyword"
-            @keyup.enter.native="searchRes"
-            suffix="ios-search"
-            placeholder="Search"
-            style="width: auto" />
-      </div>
-      <div class="col-10">
-        <p><strong><font size="1">数据接收方式</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
+  <d-container fluid class="main-content-container px-4 pb-4">
+    <!-- Page Header -->
+    <d-row no-gutters class="page-header py-4">
+      <!-- Page Title -->
+      <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
+        <!--<span class="text-uppercase page-subtitle">The record is only saved for 48 hours </span>-->
+        <h3 class="page-title">HTTP Request</h3>
+      </d-col>
+    </d-row>
+    <div class="row">
+      <div class="col">
+        <div class="card card-small mb-4">
+          <div class="card-header border-bottom">
+            <Input
+                v-model="keyword"
+                @keyup.enter.native="searchRes"
+                suffix="ios-search"
+                placeholder="Search" style="width: auto" class="mr-3" />
+            <p class="p-2"><strong><font size="1">Example:</font></strong><code><font size="1">{{httpUsage}}</font></code></p>
+            <div>
+              <Spin size="large" fix v-if="spinShow"></Spin>
+              <Table :columns="columns" :data="httpLogItems">
+                <template slot="action" slot-scope="{ row }">
+                  <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
+                </template>
+              </Table>
+            </div>
+          </div>
+
+          <Page
+              class="p-2"
+              :total="getRowCount(items)"
+              show-elevator
+              show-total
+              show-sizer
+              :page-size="pageSize"
+              @on-page-size-change="sizeChange"
+              @on-change="pageChange"/>
+        </div>
+
       </div>
     </div>
-    <div>
-      <Spin size="large" fix v-if="spinShow"></Spin>
-      <Table :columns="columns" :data="httpLogItems">
-        <template slot="action" slot-scope="{ row }">
-          <Icon @click="deleteHttpLog(row.hid)" title="delete poc" size="15" type="md-trash" />
-        </template>
-      </Table>
-    </div>
-    <Page
-        class="p-2"
-        :total="getRowCount(items)"
-        show-elevator
-        show-total
-        show-sizer
-        :page-size="pageSize"
-        @on-page-size-change="sizeChange"
-        @on-change="pageChange"/>
-  </div>
+  </d-container>
 </template>
 
 <script>
@@ -60,16 +70,18 @@
             }
           },
           {
-            title: 'Refer',
-            key: 'refer',
-          },
-          {
             title: 'IP',
             key: 'ip',
+            width: 200,
+          },
+          {
+            title: 'Content',
+            key: 'new_data',
           },
           {
             title: 'Date',
             key: 'date',
+            width: 200,
           },
           {
             title: 'Action',
@@ -84,7 +96,11 @@
       this.$axios.get("tools/xss/httplog").then(response => {
         let res = response.data;
         if (res['status'] === 'success') {
-          this.items = res['data'];
+          // this.items = res['data'];
+          for (let i=0; i<res['data'].length; i++) {
+            res['data'][i]['new_data'] = res['data'][i]['data'].substring(0, 60) + "...";
+            this.items.push(res['data'][i])
+          }
           let _start = ( this.pageCurrent - 1 ) * this.pageSize;
           let _end = this.pageCurrent * this.pageSize;
           this.httpLogItems = this.items.slice(_start,_end);
@@ -133,7 +149,7 @@
         this.spinShow = true;
         this.items = [];
         this.httpLogItems = [];
-        this.$axios.get("tools/xss/httplog/search/" + this.keyword).then(response => {
+        this.$axios.get("tools/xss/httplog/search?filter_key=" + this.keyword).then(response => {
           let res = response.data;
           if (res['status'] === 'success') {
             this.items = res['data'];

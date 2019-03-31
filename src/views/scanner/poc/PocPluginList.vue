@@ -51,7 +51,7 @@
                     <th scope="col" class="border-0 text-center">#</th>
                     <th scope="col" class="border-0">PoC Name</th>
                     <th scope="col" class="border-0">Type</th>
-                    <th scope="col" class="border-0">Author</th>
+                    <th scope="col" class="border-0">App</th>
                     <th scope="col" class="border-0">Date</th>
                     <th scope="col" class="border-0 text-center">Actions</th>
                   </tr>
@@ -59,13 +59,17 @@
                   <tbody>
                   <tr v-for="(item, index) in pluginItems">
                     <td class="text-center">{{ index + 1 }}</td>
-                    <td>{{ item.name }}</td>
+                    <td>
+                      <Tooltip max-width="100" placement="top" :content="item.name" theme="light">
+                        {{ item.name | longText }}
+                      </Tooltip>
+                    </td>
                     <td>{{ item.type }}</td>
-                    <td>{{ item.author }}</td>
+                    <td>{{ item.app }}</td>
                     <td>{{ item.date }}</td>
                     <td class="text-center">
                       <Tooltip placement="top" content="Detail" theme="light">
-                        <Icon @click="getPocDetail(item.pid)" title="get code" size="21" type="md-code" class="mr-2" />
+                        <Icon @click="getPocDetail(item.pid)" title="get code" size="21" type="md-code" class="mr-3" />
                       </Tooltip>
                       <Tooltip placement="top" content="Trash" theme="light">
                         <Icon @click="deletePoC(item.pid)" title="delete poc" size="21" type="md-trash" />
@@ -110,6 +114,16 @@
 
   export default {
     name: "PocPluginList",
+    filters: {
+      longText: function (value) {
+        if (!value) return '';
+        if (value.length > 50) {
+          return value.substring(0,50) + "..."
+        } else {
+          return value
+        }
+      }
+    },
     data() {
       return {
         spinShow: true,
@@ -201,11 +215,11 @@
         });
       },
       searchRes() {
-        this.$axios.get("scanner/poc/plugins/" + this.keyword).then(response => {
+        this.$axios.get("scanner/poc/plugins/filter?filter_key=" + this.keyword).then(response => {
           let res = response.data;
           if (res['status'] === 'success') {
             this.items = res['data'];
-            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _start = 0;
             let _end = this.pageCurrent * this.pageSize;
             this.pluginItems = this.items.slice(_start,_end);
             this.spinShow = false;

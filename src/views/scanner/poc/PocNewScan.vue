@@ -5,7 +5,6 @@
       <!-- Page Title -->
       <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
         <span class="text-uppercase page-subtitle">New Scan</span>
-        <!--<h3 class="page-title">创建扫描任务</h3>-->
       </d-col>
     </d-row>
     <d-row>
@@ -31,7 +30,7 @@
                   <Select
                       style="width:150px"
                       v-model="newScanData.freq"
-                      placeholder="选择扫描周期">
+                      placeholder="Frequency">
                     <Option value="once">Once</Option>
                     <Option value="daily">Every day</Option>
                     <Option value="weekly">Every week</Option>
@@ -60,10 +59,15 @@
                   <Slider v-model="newScanData.thread" :max=50 show-input></Slider>
                 </FormItem>
                 <FormItem label="Notification" prop="interest">
-                  <Checkbox v-model="newScanData.other"> 扫描完成通知</Checkbox>
+                  <Checkbox v-model="newScanData.other"> Notification</Checkbox>
                 </FormItem>
                 <FormItem>
-                  <Button type="primary" @click="createScanTask">创建任务</Button>
+                  <div class="text-right">
+                    <Button @click="createScanTask">
+                      <i class="material-icons">library_add</i>
+                      Submit
+                    </Button>
+                  </div>
                 </FormItem>
               </Form>
             </d-col>
@@ -75,7 +79,7 @@
           <!-- Card Header -->
           <d-card-header class="border-bottom">
             <h5 class="m-0">Quick Scan</h5>
-            <span><font size="1">设置目标及 POC 进行一次临时检测</font></span>
+            <span><font size="1">Set target and POC for a temporary check</font></span>
           </d-card-header>
           <br>
           <d-row class="justify-content-center">
@@ -83,7 +87,7 @@
               <d-form>
                 <d-form-row>
                   <d-col md="12" class="form-group">
-                    <label><font size="2">* 设置目标</font></label>
+                    <label><font size="2">* Target</font></label>
                     <Input
                         v-model="quickScanData.target"
                         type="textarea"
@@ -93,25 +97,28 @@
                 </d-form-row>
                 <d-form-row>
                   <d-col md="12" class="form-group">
-                    <label><font size="2">* 选择 POC</font></label>
+                    <label><font size="2">* POC</font></label>
                     <Select
                         v-model="quickPluginSelect"
                         multiple
                         filterable
-                        placeholder="选择插件">
+                        placeholder="poc">
                         <Option v-for="item in pocList" :value="item.key">{{ item.label }}</Option>
                     </Select>
                   </d-col>
                 </d-form-row>
-                <d-form-row>
-                  <CheckboxGroup class="mx-2">
-                    <Checkbox label="扫描完成通知"></Checkbox>
-                  </CheckboxGroup>
-                </d-form-row>
+                <!--<d-form-row>-->
+                  <!--<CheckboxGroup class="mx-2">-->
+                    <!--<Checkbox label="Notification"></Checkbox>-->
+                  <!--</CheckboxGroup>-->
+                <!--</d-form-row>-->
                 <br>
                 <d-form-row>
                   <d-col md="12" class="form-group ">
-                    <Button @click="quickScan" type="primary" shape="circle"><Icon type="ios-flash-outline" size="18"/> 快速扫描</Button>
+                    <Button @click="quickScan">
+                      <i class="material-icons">library_add</i>
+                      Execute
+                    </Button>
                   </d-col>
                 </d-form-row>
               </d-form>

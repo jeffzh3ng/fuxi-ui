@@ -78,7 +78,9 @@
                 <tbody>
                 <tr v-for="(item, index) in taskItems">
                   <td class="text-center">{{ index + 1 }}</td>
-                  <td>{{ item.name }}</td>
+                  <td><a
+                      style="text-decoration:none;color:#42b983;"
+                      @click="discoveryDetail(item.tid)">{{ item.name }}</a></td>
                   <td class="text-center">
                     <Poptip word-wrap width="200" trigger="hover" :content="item.plugin | pluginShow">
                       <Tag color="success">Show</Tag>
@@ -254,6 +256,9 @@
           //   this.$message.info('取消了删除');
           // }
         });
+      },
+      discoveryDetail(tid){
+        window.open('#/discovery/' + tid, "_blank");
       },
     }
   }

@@ -6,7 +6,7 @@ export default function () {
       icon: 'multiline_chart',
     },
     {
-      title: 'Vulnerability Scanner',
+      title: 'Vulnerabilities',
       tag: true,
     },
     {
@@ -36,17 +36,22 @@ export default function () {
       ],
     },
     {
-      title: 'Nessus Scanner',
-      to: { name: 'NessusNewScan' },
-      icon: 'navigation',
-    },
-    {
       title: 'Pentest tools',
       tag: true,
     },
     {
       title: 'XSS Platform',
       to: { name: 'XssPlatform' },
+      icon: 'navigation',
+    },
+    {
+      title: 'HTTP Request',
+      to: { name: 'HttpLog' },
+      icon: 'navigation',
+    },
+    {
+      title: 'Json Hijacker',
+      to: { name: 'JsonHijacker' },
       icon: 'navigation',
     },
     {

@@ -20,10 +20,13 @@ import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 
 // Discovery & information gathering
 import DiscoveryTask from './views/discovery/DiscoveryTask'
+import DiscoveryResult from './views/discovery/DiscoveryResult'
 import AssetsSearch from './views/discovery/AssetsSearch'
 
 // Pentest tools
 import XssPlatform from './views/tools/xss/XssPlatform'
+import HttpLog from './views/tools/httplog/HttpLog'
+import JsonHijacker from './views/tools/jsonp/JsonHijacker'
 
 Vue.use(Router);
 
@@ -83,6 +86,16 @@ export default new Router({
           name: 'XssPlatform',
           component: XssPlatform,
         },
+        {
+          path: '/tools/httplog',
+          name: 'HttpLog',
+          component: HttpLog,
+        },
+        {
+          path: '/tools/jsonp',
+          name: 'JsonHijacker',
+          component: JsonHijacker,
+        },
 
         {
           path: '/assets/search',
@@ -95,6 +108,11 @@ export default new Router({
           path: '/discovery',
           name: 'DiscoveryTask',
           component: DiscoveryTask,
+        },
+        {
+          path: '/discovery/:tid',
+          name: 'DiscoveryResult',
+          component: DiscoveryResult,
         },
       ]
     },

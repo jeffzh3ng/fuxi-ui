@@ -149,11 +149,11 @@
         });
       },
       searchRes() {
-        this.$axios.get("scanner/poc/tasks/" + this.keyword).then(response => {
+        this.$axios.get("scanner/poc/tasks/filter?filter_key=" + this.keyword).then(response => {
           let res = response.data;
           if (res['status'] === 'success') {
             this.items = res['data'];
-            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _start = 0;
             let _end = this.pageCurrent * this.pageSize;
             this.taskItems = this.items.slice(_start,_end);
             this.spinShow = false;

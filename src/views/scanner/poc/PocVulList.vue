@@ -38,7 +38,11 @@
                 <tbody>
                 <tr v-for="(item, index) in vulItems">
                   <td class="text-center">{{ index + 1 }}</td>
-                  <td>{{ item.poc_name }}</td>
+                  <td>
+                    <Tooltip max-width="100" placement="top" :content="item.poc_name" theme="light">
+                      {{ item.poc_name | longText }}
+                    </Tooltip>
+                  </td>
                   <td class="text-center">{{ item.target}}</td>
                   <td class="text-center">{{ item.task_name }}</td>
                   <td class="text-center">{{ item.status }}</td>
@@ -73,6 +77,16 @@
 <script>
   export default {
     name: "PocVulList",
+    filters: {
+      longText: function (value) {
+        if (!value) return '';
+        if (value.length > 30) {
+          return value.substring(0,30) + "..."
+        } else {
+          return value
+        }
+      }
+    },
     data() {
       return {
         spinShow: true,
@@ -88,7 +102,7 @@
       this.taskID = this.$route.params.tid;
       let resource_url = "scanner/poc/vuls";
       if (this.taskID) {
-        resource_url = "scanner/poc/vuls/tid_" + this.taskID
+        resource_url = "scanner/poc/vuls/filter?filter_type=task&filter_key=" + this.taskID;
       }
       this.$axios.get(resource_url).then(response => {
         let res = response.data;
@@ -150,15 +164,15 @@
         });
       },
       searchRes() {
-        let resource_url = "scanner/poc/vuls/key_" + this.keyword;
+        let resource_url = "scanner/poc/vuls/filter?filter_type=search&filter_key=" + this.keyword;
         if (this.taskID) {
-          resource_url = "scanner/poc/vuls/all_" + this.taskID + "_" + this.keyword
+          resource_url = "scanner/poc/vuls/filter?tid=" + this.taskID + "&filter_type=task_filter&filter_key=" + this.keyword
         }
         this.$axios.get(resource_url).then(response => {
           let res = response.data;
           if (res['status'] === 'success') {
             this.items = res['data'];
-            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _start = 0;
             let _end = this.pageCurrent * this.pageSize;
             this.vulItems = this.items.slice(_start,_end);
             this.spinShow = false;
