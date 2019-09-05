@@ -84,19 +84,19 @@
     },
     methods: {
       login(){
-        this.loading = true;
-        this.$axios.post("token", this.loginData).then(response => {
+        // this.loading = true;
+        this.$axios.get("token?username=" + this.loginData['username'] + "&password="+ this.loginData['password']).then(response => {
           let loginRes = response.data;
-          if(loginRes.status === "success") {
-            this.$message.success(loginRes['message']);
-            localStorage.setItem('access_token', loginRes['data']['token']);
+          if(loginRes.status.status === "success") {
+            this.$message.success(loginRes['status']['message']);
+            localStorage.setItem('access_token', loginRes['result']);
             if (localStorage.getItem('access_token')) {
               this.$router.push('/');
             } else {
-              this.$message.error("Set token error")
+              this.$message.error("set token error")
             }
           } else {
-            this.$message.error(loginRes.message);
+            this.$message.error(loginRes['status']['message']);
             this.loading = false;
           }
         });

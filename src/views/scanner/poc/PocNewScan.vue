@@ -64,7 +64,7 @@
                 <FormItem>
                   <div class="text-right">
                     <Button @click="createScanTask">
-                      <i class="material-icons">library_add</i>
+                      <i class="material-icons mr-1">add_box</i>
                       Submit
                     </Button>
                   </div>
@@ -150,10 +150,7 @@
     data () {
       return {
         getQuickScanResModal: false,
-        listStyle: {
-          width: '200px',
-          height: '250px'
-        },
+        listStyle: {width: '200px', height: '250px'},
         pocList: [],
         newScanData: {
           name: "",
@@ -161,13 +158,11 @@
           freq: "once",
           thread: 20,
           poc_id: "",
-          poc_name: "",
           other: false,
         },
         quickScanData: {
           target: "",
-          poc_id: "",
-          poc_name: "",
+          poc_id: ""
         },
         quickPluginSelect: [],
         pluginSelect: [],
@@ -192,14 +187,16 @@
       }
     },
     mounted: function () {
-      this.$axios.get('scanner/poc/plugins').then(response => {
-        let resPlugin = response.data;
-        if (resPlugin['status'] === 'success') {
-          for (let i=0;i<resPlugin.data.length; i++) {
-            this.pocList.push({"key": resPlugin.data[i]['pid'], "label": resPlugin.data[i]['name']})
+      let plugin_api = "scanner/poc/plugin";
+      this.$axios.get(plugin_api).then(response => {
+        let status = response['data']['status'];
+        let data = response['data']['result'];
+        if (status['status'] === 'success') {
+          for (let i=0;i<data.length; i++) {
+            this.pocList.push({"key": data[i]['pid'], "label": data[i]['name']})
           }
         } else {
-          this.$message.error(resPlugin.message);
+          this.$message.error(status.message);
         }
       })
     },
@@ -217,11 +214,10 @@
             poc_name.push(this.pocList[i]['label'])
           }
         }
-        this.newScanData['poc_name'] = poc_name.join("\n");
-        this.newScanData['poc_id'] = this.pluginSelect.join("\n");
+        this.newScanData['poc'] = this.pluginSelect.join(",");
+        this.newScanData['target'] = this.newScanData['target'].split("\n").join(",");
         if (this.newScanData['name'].length !== 0 &&
-          this.newScanData['poc_id'].length !== 0 &&
-          this.newScanData['poc_name'].length !== 0 &&
+          this.newScanData['poc'].length !== 0 &&
           this.newScanData['target'].length !== 0) {
           this.$Modal.confirm({
             title: 'CONFIRM',
@@ -231,12 +227,12 @@
             cancelText: 'Cancel',
             onOk: () => {
               this.$axios.post("scanner/poc/task", this.newScanData).then(response => {
-                let resNewTask = response.data;
-                if(resNewTask.status === "success") {
-                  this.$message.success(resNewTask['message']);
+                let status = response['data']['status'];
+                if(status['status'] === "success") {
+                  this.$message.success(status['message']);
                   this.$router.push('/scanner/poc/scans');
                 } else {
-                  this.$message.error(resNewTask['message'])
+                  this.$message.error(status['message'])
                 }
               })
             }
@@ -252,21 +248,23 @@
             poc_name.push(this.pocList[i]['label'])
           }
         }
-        this.quickScanData['poc_name'] = poc_name.join("\n");
-        this.quickScanData['poc_id'] = this.quickPluginSelect.join("\n");
+        this.quickScanData['target'] = this.quickScanData['target'].split("\n").join(",");
+        this.quickScanData['poc'] = this.quickPluginSelect.join(",");
+        this.quickScanData['quick'] = true;
         this.quickModalTitle = this.quickScanData['target'] + " - " + this.quickScanData['poc_name'];
         this.quickModalSpinShow = true;
         this.quickResult = "";
         this.getQuickScanResModal = true;
 
-        this.$axios.post("scanner/poc/scan", this.quickScanData).then(response => {
-          let res = response.data;
-          if(res.status === "success") {
-            this.quickResult = res['data'];
+        this.$axios.post("scanner/poc/task", this.quickScanData).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if(status.status === "success") {
+            this.quickResult = data;
             this.quickModalSpinShow = false
           } else {
-            this.quickResult = res['message'];
-            this.$message.error(res['message']);
+            this.quickResult = status['message'];
+            this.$message.error(status['message']);
             this.quickModalSpinShow = false
           }
         })
@@ -283,10 +281,5 @@
     from { transform: rotate(0deg);}
     50%  { transform: rotate(180deg);}
     to   { transform: rotate(360deg);}
-  }
-  .demo-spin-col{
-    height: 100px;
-    position: relative;
-    border: 1px solid #eee;
   }
 </style>

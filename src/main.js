@@ -33,6 +33,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@/assets/scss/shards-dashboards.scss';
 import '@/assets/scss/date-range.scss';
 import 'iview/dist/styles/iview.css';
+import 'material-icons/iconfont/material-icons.css';
 
 // Core
 import App from './App.vue';
@@ -72,14 +73,14 @@ Vue.component('default-layout', DefaultLayout);
 Vue.config.productionTip = false;
 
 // Axios configurable
-let apiPath = window.location.protocol + "//" + window.location.host.split(':')[0] + ":50010/api/v1"; // 测试环境
+let apiPath = window.location.protocol + "//" + window.location.host.split(':')[0] + ":50020/api/v1"; // 测试环境
 // let apiPath = window.location.protocol + "//" + window.location.host + "/api/v1"; // 生产环境
 Axios.defaults.baseURL = apiPath;
 Axios.interceptors.request.use(
   config => {
     const token = localStorage.getItem('access_token');
     if (token) {
-      config.headers['Access-Token']  = token;
+      config.headers['token']  = token;
     }
     config.headers['Access-Control-Allow-Origin'] = '*';
     config.headers['Access-Control-Allow-Headers'] = '*';
@@ -106,7 +107,7 @@ Axios.interceptors.response.use((response) => {
     }
   } else {
     message.error('Unknown error, Please check your Internet connection');
-    router.push('/login')
+    // router.push('/login')
   }
   return Promise.reject(error.response.data)
 });

@@ -1,0 +1,227 @@
+<template>
+  <d-container fluid class="main-content-container px-4 pb-4">
+    <!-- Page Header -->
+    <d-row no-gutters class="page-header py-4">
+      <!-- Page Title -->
+      <d-col col sm="4" class="text-center text-sm-left mb-4 mb-sm-0">
+        <span class="text-uppercase page-subtitle">Test for XSS vulnerabilities</span>
+        <h3 class="page-title">XSS Hunter</h3>
+      </d-col>
+    </d-row>
+
+    <div class="row">
+      <div class="col">
+        <div class="card card-small mb-4">
+          <div class="card-header border-bottom">
+            <Input
+                class="mr-2"
+                v-model="searchText"
+                @keyup.enter.native="search"
+                suffix="ios-search"
+                placeholder="Search"
+                style="width: auto" />
+          </div>
+          <div class="card-body p-0 pb-3">
+            <div>
+              <Spin size="large" fix v-if="spinShow"></Spin>
+              <table class="table mb-0">
+                <thead class="bg-light">
+                <tr>
+                  <th scope="col" class="border-0 text-center">#</th>
+                  <th scope="col" class="border-0">Task Name</th>
+                  <th scope="col" class="border-0">Host</th>
+                  <th scope="col" class="border-0 text-center">Data</th>
+                  <th scope="col" class="border-0" >Date</th>
+                  <th scope="col" class="border-0 text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item, index) in tableData">
+                  <td class="text-center">{{ index + 1 }}</td>
+                  <td >{{taskName}}</td>
+                  <td >{{item.ip}}</td>
+                  <td >
+                    <Tooltip max-width="1000" placement="top" :content="item.data" theme="light">
+                      <span>{{item.data | longText}}</span>
+                    </Tooltip>
+                  </td>
+                  <td >{{item.date}}</td>
+                  <td class="text-center">
+                    <Tooltip placement="top" content="Show" theme="light">
+                      <Icon class="mx-2" @click="showData(item.ip, item.date, item.data)" title="Show" size="21" type="ios-folder-outline" />
+                    </Tooltip>
+                    <Tooltip placement="top" content="Trash" theme="light">
+                      <Icon @click="deleteData(item['_id'])" title="Trash" size="21" type="md-trash" />
+                    </Tooltip>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+              <Modal
+                  v-model="showDataModal"
+                  scrollable
+                  footer-hide
+                  :title="jsonpHost + ' - ' + jsonpDate">
+                <div>
+                  <code>{{jsonpData}}</code>
+                </div>
+              </Modal>
+            </div>
+            <div v-if="items.length === 0">
+              <d-row>
+                <d-col lg="12" md="12" sm="12">
+                  <h6 class="text-center pt-3">No data</h6>
+                </d-col>
+              </d-row>
+            </div>
+            <br>
+            <Page
+                class="mx-4"
+                :total="getRowCount(items)"
+                show-elevator
+                show-total
+                show-sizer
+                :page-size="pageSize"
+                @on-page-size-change="sizeChange"
+                @on-change="pageChange"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </d-container>
+</template>
+
+
+<script>
+  export default {
+    name: "XssData",
+    filters: {
+      longText: function (value) {
+        if (!value) return '';
+        if (value.length > 70) {
+          return value.substring(0,55) + "..." + value.substring(value.length-20)
+        } else {
+          return value
+        }
+      },
+    },
+    data() {
+      return {
+        salt: "",
+        taskName: "",
+        spinShow: true,
+        showDataModal: false,
+        jsonpHost: "",
+        jsonpDate: "",
+        jsonpData: {},
+        items: [],
+        tableData: [],
+        pageSize: 10,
+        pageCurrent: 1,
+        searchText: "",
+      }
+    },
+    mounted() {
+      this.salt = this.$route.query.salt;
+      this.taskName = this.$route.query.task;
+      if (this.taskName === undefined){
+        this.taskName = "-"
+      }
+      if (this.salt !== undefined) {
+        this.getData(this.salt)
+      }
+    },
+    methods: {
+      getRowCount (items) {
+        return items.length
+      },
+      pageChange(currentPage) {
+        let _start = ( currentPage - 1 ) * this.pageSize;
+        let _end = currentPage * this.pageSize;
+        this.tableData = this.items.slice(_start,_end);
+        this.pageCurrent=currentPage;
+      },
+      sizeChange(index){
+        this.pageSize = index;
+        let _start = 0;
+        let _end = this.pageSize;
+        this.tableData = this.items.slice(_start,_end);
+      },
+      getData(salt) {
+        this.$axios.get("/tools/xss/project/" + salt).then(response => {
+          let res = response.data;
+          if (res['status'] === 'success') {
+            this.items = res['data'];
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.tableData = this.items.slice(_start,_end);
+            this.spinShow = false
+          } else {
+            this.$message.error(res['message']);
+            this.spinShow = false
+          }
+        })
+      },
+      deleteData(vid) {
+        this.$Modal.confirm({
+          title: 'WARNING',
+          content: 'Are you sure you want to delete this item?',
+          closable: true,
+          okText: 'OK',
+          cancelText: 'Cancel',
+          onOk: () => {
+            this.$axios.delete('/tools/xss/result/' + vid).then(response => {
+              let res = response.data;
+              if (res['status'] === 'success') {
+                this.$message.success(res.message);
+                this.getData(this.salt)
+              } else {
+                this.$message.error(res.message)
+              }
+            });
+          },
+        });
+      },
+      showData(host, date, data){
+        this.showDataModal = true;
+        this.jsonpHost = host;
+        this.jsonpDate = date;
+        this.jsonpData = data;
+      },
+      search() {
+        if (this.searchText.length === 0) {
+          this.getData();
+          return
+        }
+        this.spinShow = true;
+        this.$axios.get("/tools/xss/project/" + this.salt).then(response => {
+          let res = response.data;
+          if (res['status'] === 'success') {
+            let filterItems = [];
+            this.items = res['data'];
+            for (let i=0;i<this.items.length;i++) {
+              let res = this.items[i]['data'];
+              let host = this.items[i]['ip'];
+              let date = this.items[i]['date'];
+              if (res.indexOf(this.searchText) !== -1 || host.indexOf(this.searchText) !== -1 || date.indexOf(this.searchText) !== -1) {
+                filterItems.push(this.items[i])
+              }
+            }
+            this.items = filterItems;
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.tableData = this.items.slice(_start,_end);
+            this.spinShow = false
+          } else {
+            this.$message.error(res['message']);
+            this.spinShow = false
+          }
+        });
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

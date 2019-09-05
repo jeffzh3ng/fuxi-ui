@@ -55,9 +55,12 @@
                 </tbody>
               </table>
             </div>
-            <br>
+            <div v-if="items.length===0">
+              <h6  class="text-center mt-4">No Data</h6>
+              <br>
+            </div>
             <Page
-                class="mx-4"
+                class="mx-4 mt-3"
                 :total="getRowCount(items)"
                 show-elevator
                 show-total
@@ -86,16 +89,17 @@
       }
     },
     mounted() {
-      this.$axios.get("scanner/poc/tasks").then(response => {
-        let res = response.data;
-        if (res['status'] === 'success') {
-          this.items = res['data'];
+      this.$axios.get("scanner/poc/task").then(response => {
+        let status = response['data']['status'];
+        let data = response['data']['result'];
+        if (status['status'] === 'success') {
+          this.items = data;
           let _start = ( this.pageCurrent - 1 ) * this.pageSize;
           let _end = this.pageCurrent * this.pageSize;
           this.taskItems = this.items.slice(_start,_end);
           this.spinShow = false;
         } else {
-          this.$message.error(res['message'])
+          this.$message.error(status['message'])
         }
       })
     },
@@ -116,7 +120,7 @@
         this.taskItems = this.items.slice(_start,_end);
       },
       scanResFilter(tid){
-        window.open('#/scanner/poc/vul/' + tid, "_blank");
+        window.open('#/scanner/poc/vuls?task_id=' + tid, "_blank");
       },
       deleteTask(tid) {
         this.$Modal.confirm({
@@ -127,8 +131,9 @@
           cancelText: 'Cancel',
           onOk: () => {
             this.$axios.delete('scanner/poc/task/' + tid).then(response => {
-              let res = response.data;
-              if (res['status'] === 'success') {
+              let status = response['data']['status'];
+              // let data = response['data']['result'];
+              if (status['status'] === 'success') {
                 for (let i=0; i< this.items.length;i++){
                   if (this.items[i]['tid'] === tid) {
                     this.items.splice(i,1);
@@ -137,9 +142,9 @@
                 let _start = ( this.pageCurrent - 1 ) * this.pageSize;
                 let _end = this.pageCurrent * this.pageSize;
                 this.taskItems = this.items.slice(_start,_end);
-                this.$message.success(res.message);
+                this.$message.success(status.message);
               } else {
-                this.$message.error(res.message)
+                this.$message.error(status.message)
               }
             });
           },
@@ -149,16 +154,17 @@
         });
       },
       searchRes() {
-        this.$axios.get("scanner/poc/tasks/filter?filter_key=" + this.keyword).then(response => {
-          let res = response.data;
-          if (res['status'] === 'success') {
-            this.items = res['data'];
-            let _start = 0;
+        this.$axios.get("scanner/poc/task?search=" + this.keyword).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
+            this.items = data;
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
             this.taskItems = this.items.slice(_start,_end);
             this.spinShow = false;
           } else {
-            this.$message.error(res['message'])
+            this.$message.error(status['message'])
           }
         })
       }

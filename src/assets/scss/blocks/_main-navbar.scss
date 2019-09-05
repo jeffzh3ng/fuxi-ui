@@ -34,7 +34,8 @@
 
     .dropdown-menu {
       padding: 0;
-      min-width: $notifications-dropdown-min-width;
+      min-width: 13rem;
+      //min-width: $notifications-dropdown-min-width;
       border-right: 0;
       left: auto;
 

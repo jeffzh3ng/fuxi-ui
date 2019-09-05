@@ -6,7 +6,7 @@ export default function () {
       icon: 'multiline_chart',
     },
     {
-      title: 'Vulnerability Analysis',
+      title: 'Vulnerabilities',
       tag: true,
     },
     {
@@ -36,18 +36,32 @@ export default function () {
       ],
     },
     {
-      title: 'Exploitation Tools',
+      title: 'Pentest tools',
       tag: true,
     },
     {
-      title: 'Jsonp hijacking',
-      to: { name: 'JsonHijackerTask' },
+      title: 'XSS Hunter',
+      to: { name: 'XssPlatform' },
       icon: 'navigation',
     },
     {
-      title: 'HTTP Logger',
-      to: { name: 'HttpRequestLog' },
+      title: 'HTTP Request',
+      to: { name: 'HttpLog' },
       icon: 'navigation',
+    },
+    {
+      title: 'Json Hijacker',
+      to: { name: 'JsonHijacker' },
+      icon: 'navigation',
+    },
+    {
+      title: 'Information gathering',
+      tag: true,
+    },
+    {
+      title: 'Port Scanner',
+      to: { name: 'PortScanner' },
+      icon: 'domain',
     },
   ];
 }

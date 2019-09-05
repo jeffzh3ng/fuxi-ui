@@ -24,7 +24,6 @@
           </div>
           <Modal
               v-model="addPocModal"
-              draggable
               scrollable
               footer-hide
               title="New PoC">
@@ -89,9 +88,12 @@
                   </div>
                 </Modal>
               </div>
-            <br>
+            <div v-if="items.length===0">
+              <h6  class="text-center mt-4">No Data</h6>
+              <br>
+            </div>
             <Page
-                class="mx-4"
+                class="mx-4 mt-3"
                 :total="getRowCount(items)"
                 show-elevator
                 show-total
@@ -134,20 +136,23 @@
         addPocModal: false,
         getPocCodeModal: false,
         pocDetail: "",
-        upload_api: this.apiPath + "/scanner/poc/upload"
+        keyword: "",
+        pocPluginAPI: "scanner/poc/plugin",
+        upload_api: this.apiPath + "/scanner/poc/plugin?token=" + localStorage.getItem('access_token')
       }
     },
     mounted() {
-      this.$axios.get("scanner/poc/plugins").then(response => {
-        let resPlugin = response.data;
-        if (resPlugin['status'] === 'success') {
-          this.items = resPlugin['data'];
+      this.$axios.get(this.pocPluginAPI).then(response => {
+        let status = response['data']['status'];
+        let data = response['data']['result'];
+        if (status['status'] === 'success') {
+          this.items = data;
           let _start = ( this.pageCurrent - 1 ) * this.pageSize;
           let _end = this.pageCurrent * this.pageSize;
           this.pluginItems = this.items.slice(_start,_end);
           this.spinShow = false;
         } else {
-          this.$message.error(resPlugin['message'])
+          this.$message.error(status['message'])
         }
       })
     },
@@ -172,23 +177,24 @@
         this.$message.error("Failed to upload: " + filename)
       },
       uploadPocSuccess() {
-        this.$axios.get("scanner/poc/plugins").then(response => {
-          let resPlugin = response.data;
-          if (resPlugin['status'] === 'success') {
+        this.$axios.get(this.pocPluginAPI).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
             this.items = [];
-            this.items = resPlugin['data'];
+            this.items = data;
             let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
             this.pluginItems = this.items.slice(_start,_end);
           } else {
-            this.$message.error(resPlugin['message'])
+            this.$message.error(status['message'])
           }
         })
       },
       deletePoC(pid) {
-        this.$axios.delete('scanner/poc/plugin/' + pid).then(response => {
-          let resDeleteRes = response.data;
-          if (resDeleteRes['status'] === 'success') {
+        this.$axios.delete(this.pocPluginAPI + "/" + pid).then(response => {
+          let status = response['data']['status'];
+          if (status['status'] === 'success') {
             for (let i=0; i< this.items.length;i++){
               if (this.items[i]['pid'] === pid) {
                 this.items.splice(i,1);
@@ -197,34 +203,36 @@
             let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
             this.pluginItems = this.items.slice(_start,_end);
-            this.$message.success(resDeleteRes.message);
+            this.$message.success(status.message);
           } else {
-            this.$message.error(resDeleteRes.message)
+            this.$message.error(status.message)
           }
         });
       },
       getPocDetail (pid) {
-        this.$axios.get('scanner/poc/plugin/' + pid).then(response => {
-          let res = response.data;
-          if (res['status'] === 'success') {
-            this.pocDetail = res['data'];
+        this.$axios.get(this.pocPluginAPI + "/" + pid).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
+            this.pocDetail = data;
             this.getPocCodeModal = true
           } else {
-            this.$message.error(res.message)
+            this.$message.error(status.message)
           }
         });
       },
       searchRes() {
-        this.$axios.get("scanner/poc/plugins/filter?filter_key=" + this.keyword).then(response => {
-          let res = response.data;
-          if (res['status'] === 'success') {
-            this.items = res['data'];
-            let _start = 0;
+        this.$axios.get(this.pocPluginAPI + "?search=" + this.keyword).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
+            this.items = data;
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
             this.pluginItems = this.items.slice(_start,_end);
             this.spinShow = false;
           } else {
-            this.$message.error(res['message'])
+            this.$message.error(status['message'])
           }
         })
       }

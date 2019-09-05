@@ -57,9 +57,12 @@
                 </tbody>
               </table>
             </div>
-            <br>
+            <div v-if="items.length===0">
+              <h6  class="text-center mt-4">No Data</h6>
+              <br>
+            </div>
             <Page
-                class="mx-4"
+                class="mx-4 mt-3"
                 :total="getRowCount(items)"
                 show-elevator
                 show-total
@@ -94,26 +97,39 @@
         vulItems: [],
         pageSize: 10,
         pageCurrent: 1,
-        taskID: "",
         keyword: "",
+        taskID: "",
+        pluginID: "",
+        search: "",
       }
     },
     mounted() {
-      this.taskID = this.$route.params.tid;
-      let resource_url = "scanner/poc/vuls";
-      if (this.taskID) {
-        resource_url = "scanner/poc/vuls/filter?filter_type=task&filter_key=" + this.taskID;
+      this.taskID = this.$route.query.task_id;
+      this.pluginID = this.$route.query.plugin_id;
+      this.search = this.$route.query.search;
+      let resource_url = "scanner/poc/vul";
+      if (this.search !== undefined && this.taskID !== undefined) {
+        resource_url = "scanner/poc/vul?task_id=" + this.taskID + "&search=" + this.search
+      } else if (this.search !== undefined && this.pluginID !== undefined) {
+        resource_url = "scanner/poc/vul?plugin_id=" + this.pluginID + "&search=" + this.search
+      } else if (this.taskID !== undefined) {
+        resource_url = "scanner/poc/vul?task_id=" + this.taskID
+      } else if (this.pluginID !== undefined) {
+        resource_url = "scanner/poc/vul?plugin_id=" + this.pluginID
+      } else if (this.search !== undefined) {
+        resource_url = "scanner/poc/vul?search=" + this.search
       }
       this.$axios.get(resource_url).then(response => {
-        let res = response.data;
-        if (res['status'] === 'success') {
-          this.items = res['data'];
+        let status = response['data']['status'];
+        let data = response['data']['result'];
+        if (status['status'] === 'success') {
+          this.items = data;
           let _start = ( this.pageCurrent - 1 ) * this.pageSize;
           let _end = this.pageCurrent * this.pageSize;
           this.vulItems = this.items.slice(_start,_end);
           this.spinShow = false;
         } else {
-          this.$message.error(res['message'])
+          this.$message.error(status['message'])
         }
       })
     },
@@ -142,8 +158,9 @@
           cancelText: 'Cancel',
           onOk: () => {
             this.$axios.delete('scanner/poc/vul/' + tid).then(response => {
-              let res = response.data;
-              if (res['status'] === 'success') {
+              let status = response['data']['status'];
+              // let data = response['data']['result'];
+              if (status['status'] === 'success') {
                 for (let i=0; i< this.items.length;i++){
                   if (this.items[i]['vid'] === tid) {
                     this.items.splice(i,1);
@@ -152,32 +169,32 @@
                 let _start = ( this.pageCurrent - 1 ) * this.pageSize;
                 let _end = this.pageCurrent * this.pageSize;
                 this.vulItems = this.items.slice(_start,_end);
-                this.$message.success(res.message);
+                this.$message.success(status.message);
               } else {
-                this.$message.error(res.message)
+                this.$message.error(status.message)
               }
             });
           },
-          // onCancel: () => {
-          //   this.$message.info('取消了删除');
-          // }
         });
       },
       searchRes() {
-        let resource_url = "scanner/poc/vuls/filter?filter_type=search&filter_key=" + this.keyword;
-        if (this.taskID) {
-          resource_url = "scanner/poc/vuls/filter?tid=" + this.taskID + "&filter_type=task_filter&filter_key=" + this.keyword
+        let resource_url = "scanner/poc/vul?search=" + this.keyword;
+        if (this.taskID !== undefined) {
+          resource_url = "scanner/poc/vul?task_id=" + this.taskID + "&search=" + this.keyword
+        } else if (this.pluginID !== undefined) {
+          resource_url = "scanner/poc/vul?plugin_id=" + this.taskID + "&search=" + this.keyword
         }
         this.$axios.get(resource_url).then(response => {
-          let res = response.data;
-          if (res['status'] === 'success') {
-            this.items = res['data'];
-            let _start = 0;
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
+            this.items = data;
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
             let _end = this.pageCurrent * this.pageSize;
             this.vulItems = this.items.slice(_start,_end);
             this.spinShow = false;
           } else {
-            this.$message.error(res['message'])
+            this.$message.error(status['message'])
           }
         })
       }

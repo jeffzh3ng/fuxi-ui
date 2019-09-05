@@ -3,30 +3,22 @@ import Router from 'vue-router';
 
 // DefaultContainer
 import DefaultContainer from './layouts/DefaultLayout.vue';
-
 // Login
 import Login from './views/Login.vue';
-
 // dashboard
 import Dashboard from './views/Dashboard.vue';
 
-// scanner
+// Vulnerability Analysis
 import PocNewScan from './views/scanner/poc/PocNewScan'
 import PocScans from './views/scanner/poc/PocScans'
 import PocPluginList from './views/scanner/poc/PocPluginList'
 import PocVulList from './views/scanner/poc/PocVulList'
-
 import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 
-// Discovery & information gathering
-import DiscoveryTask from './views/discovery/DiscoveryTask'
-import DiscoveryResult from './views/discovery/DiscoveryResult'
-import AssetsSearch from './views/discovery/AssetsSearch'
-
-// Pentest tools
-import XssPlatform from './views/tools/xss/XssPlatform'
-import HttpLog from './views/tools/httplog/HttpLog'
-import JsonHijacker from './views/tools/jsonp/JsonHijacker'
+// Exploitation Tools
+import JsonHijackerData from './views/exploit/jsonp/JsonHijackerData'
+import JsonHijackerTask from './views/exploit/jsonp/JsonHijackerTask'
+import HttpRequestLog from './views/exploit/http_log/HttpRequestLog'
 
 Vue.use(Router);
 
@@ -49,8 +41,7 @@ export default new Router({
           name: 'Dashboard',
           component: Dashboard,
         },
-
-        // scanner
+        // Vulnerability Analysis
         {
           path: '/scanner/poc/new_scan',
           name: 'PocNewScan',
@@ -81,38 +72,21 @@ export default new Router({
           name: 'NessusNewScan',
           component: NessusNewScan,
         },
+        // Exploitation Tools
         {
-          path: '/tools/xss',
-          name: 'XssPlatform',
-          component: XssPlatform,
+          path: '/exploit/jsonp/task',
+          name: 'JsonHijackerTask',
+          component: JsonHijackerTask,
         },
         {
-          path: '/tools/httplog',
-          name: 'HttpLog',
-          component: HttpLog,
+          path: '/exploit/jsonp/data',
+          name: 'JsonHijackerData',
+          component: JsonHijackerData,
         },
         {
-          path: '/tools/jsonp',
-          name: 'JsonHijacker',
-          component: JsonHijacker,
-        },
-
-        {
-          path: '/assets/search',
-          name: 'AssetsSearch',
-          component: AssetsSearch,
-        },
-
-
-        {
-          path: '/discovery',
-          name: 'DiscoveryTask',
-          component: DiscoveryTask,
-        },
-        {
-          path: '/discovery/:tid',
-          name: 'DiscoveryResult',
-          component: DiscoveryResult,
+          path: '/exploit/httpLog',
+          name: 'HttpRequestLog',
+          component: HttpRequestLog,
         },
       ]
     },
