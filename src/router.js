@@ -19,6 +19,11 @@ import NessusNewScan from './views/scanner/nessus/NessusNewScan'
 import JsonHijackerData from './views/exploit/jsonp/JsonHijackerData'
 import JsonHijackerTask from './views/exploit/jsonp/JsonHijackerTask'
 import HttpRequestLog from './views/exploit/http_log/HttpRequestLog'
+import XssPlatform from './views/exploit/xss/XssPlatform'
+import XssResult from './views/exploit/xss/XssResult'
+
+// Information Gathering
+import NewPortScan from './views/discovery/port/NewPortScan'
 
 Vue.use(Router);
 
@@ -87,6 +92,22 @@ export default new Router({
           path: '/exploit/httpLog',
           name: 'HttpRequestLog',
           component: HttpRequestLog,
+        },
+        {
+          path: '/exploit/xss',
+          name: 'XssPlatform',
+          component: XssPlatform,
+        },
+        {
+          path: '/exploit/xss/result',
+          name: 'XssResult',
+          component: XssResult,
+        },
+        // Information Gathering
+        {
+          path: '/discovery/port/new',
+          name: 'NewPortScan',
+          component: NewPortScan,
         },
       ]
     },

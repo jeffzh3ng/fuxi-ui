@@ -24,7 +24,7 @@
                   label-position="left"
                   :label-width="100">
                 <FormItem label="Name" prop="name">
-                  <Input v-model="newScanData.name" placeholder="Enter your name"></Input>
+                  <Input v-model="newScanData.name" placeholder="Enter task name"></Input>
                 </FormItem>
                 <FormItem label="Frequency" prop="freq">
                   <Select

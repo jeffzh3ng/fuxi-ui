@@ -6,6 +6,21 @@ export default function () {
       icon: 'multiline_chart',
     },
     {
+      title: 'Information Gathering',
+      tag: true,
+    },
+    {
+      title: 'Port Scanner',
+      icon: 'navigation',
+      items: [
+        {
+          title: 'New scan',
+          icon: 'add',
+          to: { name: 'NewPortScan' },
+        }
+      ]
+    },
+    {
       title: 'Vulnerability Analysis',
       tag: true,
     },
@@ -40,7 +55,12 @@ export default function () {
       tag: true,
     },
     {
-      title: 'Jsonp hijacking',
+      title: 'XSS Hunter',
+      to: { name: 'XssPlatform' },
+      icon: 'navigation',
+    },
+    {
+      title: 'Jsonp Hijacking',
       to: { name: 'JsonHijackerTask' },
       icon: 'navigation',
     },
@@ -48,6 +68,6 @@ export default function () {
       title: 'HTTP Logger',
       to: { name: 'HttpRequestLog' },
       icon: 'navigation',
-    },
+    }
   ];
 }

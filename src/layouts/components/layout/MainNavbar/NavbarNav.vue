@@ -41,7 +41,6 @@
         } else {
           this.$message.error(status.message);
           if (status.code === 10401) {
-            console.log(status.code);
             window.location.href = "#/login"
           }
         }
