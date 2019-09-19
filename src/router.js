@@ -24,6 +24,7 @@ import XssResult from './views/exploit/xss/XssResult'
 
 // Information Gathering
 import NewPortScan from './views/discovery/port/NewPortScan'
+import PortScanTasks from './views/discovery/port/PortScanTasks'
 
 Vue.use(Router);
 
@@ -108,6 +109,11 @@ export default new Router({
           path: '/discovery/port/new',
           name: 'NewPortScan',
           component: NewPortScan,
+        },
+        {
+          path: '/discovery/port/tasks',
+          name: 'PortScanTasks',
+          component: PortScanTasks,
         },
       ]
     },

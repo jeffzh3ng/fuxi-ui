@@ -22,11 +22,12 @@
                   label-position="left"
                   :label-width="100">
                 <FormItem label="Name" prop="name">
-                  <Input  placeholder="Enter task name"></Input>
+                  <Input v-model="newTaskData.taskName" placeholder="Enter task name"></Input>
                 </FormItem>
                 <FormItem label="Target" prop="target">
                   <Input
                       type="textarea"
+                      v-model="newTaskData.targetList"
                       :autosize="{minRows: 5,maxRows: 10}"
                       placeholder="Enter target.."></Input>
                 </FormItem>
@@ -34,6 +35,7 @@
                   <Select
                       style="width:200px"
                       @on-change="changePortSelect"
+                      v-model="newTaskData.portSelect"
                       placeholder="Default">
                     <Option value="default">Default</Option>
                     <Option value="customize">Customize</Option>
@@ -41,6 +43,7 @@
                   <Input
                       v-if=isCustomizePortList
                       class="pt-1"
+                      v-model="newTaskData.portCustomizeList"
                       type="textarea"
                       :autosize="{minRows: 2,maxRows: 5}"
                       placeholder="Enter port.."></Input>
@@ -48,20 +51,21 @@
                 <FormItem label="Options" prop="options">
                   <Select
                       style="width:150px"
+                      v-model="newTaskData.optionID"
                       placeholder="Options">
-                    <Option value="once">Once</Option>
-                    <Option value="daily">Every day</Option>
-                    <Option value="weekly">Every week</Option>
-                    <Option value="monthly">Every month</Option>
+                    <Option value="1">default</Option>
+                    <Option value=2>2</Option>
+                    <Option value=3>3</Option>
+                    <Option value=4>4</Option>
                   </Select>
                 </FormItem>
 
                 <FormItem label="Thread">
-                  <Slider :max=50 show-input></Slider>
+                  <Slider :max=50 show-input v-model="newTaskData.threatNum"></Slider>
                 </FormItem>
                 <FormItem>
                   <div class="text-right">
-                    <Button>
+                    <Button @click="createTask">
                       <i class="material-icons mr-1">add_box</i>
                       Submit
                     </Button>
@@ -84,7 +88,16 @@
     name: "NewPortScan",
     data () {
       return {
-        isCustomizePortList: false
+        isCustomizePortList: false,
+        newTaskData: {
+          taskName: "port_scan_" + this.getDateTime(),
+          targetList: "",
+          portSelect: "default",
+          portCustomizeList: "",
+          optionID: "1",
+          threatNum: 20
+        }
+
       }
     },
     mounted: function () {
@@ -92,18 +105,66 @@
     methods: {
       changePortSelect(value){
         this.isCustomizePortList = value === "customize";
-      }
+      },
+      getDateTime() {
+        let now = new Date();
+        let year = now.getFullYear();       //年
+        let month = now.getMonth() + 1;     //月
+        let day = now.getDate();            //日
+        let hh = now.getHours();            //时
+        let mm = now.getMinutes();          //分
+        let clock = year + "";
+        if(month < 10)
+          clock += "0";
+        clock += month + "";
+        if(day < 10)
+          clock += "0";
+        clock += day + "";
+        if(hh < 10)
+          clock += "0";
+        clock += hh + "";
+        if (mm < 10) clock += '0';
+        clock += mm;
+        return clock.toString();
+      },
+      createTask(){
+        let port = [];
+        if (this.newTaskData.portSelect !== "default") {
+          port = this.newTaskData.portCustomizeList.split("\n").join(",");
+        }
+        let data = {
+          name: this.newTaskData.taskName,
+          target: this.newTaskData.targetList.split("\n").join(","),
+          port: port,
+          option: this.newTaskData.optionID,
+          threat: this.newTaskData.threatNum,
+        };
+        if (data['name'].length !== 0 && data['target'].length !== 0) {
+          this.$Modal.confirm({
+            title: 'CONFIRM',
+            content: 'Are you sure to add a new scan task?',
+            closable: true,
+            okText: 'OK',
+            cancelText: 'Cancel',
+            onOk: () => {
+              this.$axios.post("/discovery/port/task", data).then(response => {
+                let status = response['data']['status'];
+                if(status['status'] === "success") {
+                  this.$message.success(status['message']);
+                  // this.$router.push('/scanner/poc/scans');
+                } else {
+                  this.$message.error(status['message'])
+                }
+              })
+            }
+          });
+        } else {
+          this.$message.error(" Please check input data")
+        }
+      },
     }
   }
 </script>
 
 <style>
-  .demo-spin-icon-load{
-    animation: ani-demo-spin 1s linear infinite;
-  }
-  @keyframes ani-demo-spin {
-    from { transform: rotate(0deg);}
-    50%  { transform: rotate(180deg);}
-    to   { transform: rotate(360deg);}
-  }
 </style>

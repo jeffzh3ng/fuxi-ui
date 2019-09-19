@@ -17,6 +17,11 @@ export default function () {
           title: 'New scan',
           icon: 'add',
           to: { name: 'NewPortScan' },
+        },
+        {
+          title: 'Tasks',
+          icon: 'add',
+          to: { name: 'PortScanTasks' },
         }
       ]
     },
