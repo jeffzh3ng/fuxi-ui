@@ -46,6 +46,7 @@
                       filter-placeholder="Filter"
                       :titles="['PoC List','Selected']"
                       :filter-method="filterMethod"
+                      not-found-text="No data"
                       @on-change="handleChange2"></Transfer>
                 </FormItem>
                 <FormItem label="Target" prop="target">

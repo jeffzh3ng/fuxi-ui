@@ -10,7 +10,7 @@
     <d-row>
       <d-col lg="12">
         <a>this is dashboard page</a>
-        <Button @click="test_api">测试接口</Button>
+        <Button @click="test_api" class="ml-2">Test</Button>
       </d-col>
     </d-row>
   </d-container>

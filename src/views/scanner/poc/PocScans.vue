@@ -47,6 +47,9 @@
                   <td>{{ item.date }}</td>
                   <td>{{ item.end_date }}</td>
                   <td class="text-center">
+                    <Tooltip placement="top" content="Rescan" theme="light">
+                      <Icon @click="rescanTask(item.tid)"  title="rescan task" size="21" type="md-refresh" class="mr-3" />
+                    </Tooltip>
                     <Tooltip placement="top" content="Trash" theme="light">
                       <Icon @click="deleteTask(item.tid)" title="delete poc" size="21" type="md-trash" />
                     </Tooltip>
@@ -81,6 +84,7 @@
     data() {
       return {
         spinShow: true,
+        reqApiPath: "scanner/poc/task",
         items: [],
         taskItems: [],
         pageSize: 10,
@@ -89,21 +93,24 @@
       }
     },
     mounted() {
-      this.$axios.get("scanner/poc/task").then(response => {
-        let status = response['data']['status'];
-        let data = response['data']['result'];
-        if (status['status'] === 'success') {
-          this.items = data;
-          let _start = ( this.pageCurrent - 1 ) * this.pageSize;
-          let _end = this.pageCurrent * this.pageSize;
-          this.taskItems = this.items.slice(_start,_end);
-          this.spinShow = false;
-        } else {
-          this.$message.error(status['message'])
-        }
-      })
+      this.getData()
     },
     methods: {
+      getData() {
+        this.$axios.get(this.reqApiPath).then(response => {
+          let status = response['data']['status'];
+          let data = response['data']['result'];
+          if (status['status'] === 'success') {
+            this.items = data;
+            let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+            let _end = this.pageCurrent * this.pageSize;
+            this.taskItems = this.items.slice(_start,_end);
+            this.spinShow = false;
+          } else {
+            this.$message.error(status['message'])
+          }
+        })
+      },
       getRowCount (items) {
         return items.length
       },
@@ -121,6 +128,25 @@
       },
       scanResFilter(tid){
         window.open('#/scanner/poc/vuls?task_id=' + tid, "_blank");
+      },
+      rescanTask(tid) {
+        this.$Modal.confirm({
+          title: 'WARNING',
+          content: 'Are you sure to rescan?',
+          closable: true,
+          okText: 'OK',
+          cancelText: 'Cancel',
+          onOk: () => {
+            this.$axios.put(this.reqApiPath + "/" + tid  + "?action=rescan").then(response => {
+              let status = response['data']['status'];
+              if (status['status'] === 'success') {
+                this.getData();
+                this.$message.success(status['message']);
+              } else {
+                this.$message.error(status['message'])
+              }
+            })
+          }});
       },
       deleteTask(tid) {
         this.$Modal.confirm({

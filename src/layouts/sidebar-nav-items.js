@@ -26,7 +26,7 @@ export default function () {
       ]
     },
     {
-      title: 'Whatweb',
+      title: 'What Web',
       icon: 'navigation',
       items: [
         {
