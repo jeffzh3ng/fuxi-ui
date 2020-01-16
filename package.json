@@ -22,7 +22,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.1.0",
     "@vue/cli-plugin-babel": "^3.0.3",
-    "@vue/cli-service": "^4.1.2",
+    "@vue/cli-service": "^3.0.3",
     "babel-plugin-import": "^1.11.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",

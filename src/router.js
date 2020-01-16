@@ -26,6 +26,7 @@ import XssResult from './views/exploit/xss/XssResult'
 import NewPortScan from './views/discovery/port/NewPortScan'
 import PortScanTasks from './views/discovery/port/PortScanTasks'
 import OnlineHost from './views/discovery/port/OnlineHost'
+import WebsiteIdentifies from './views/discovery/whatweb/WebsiteIdentifies'
 
 Vue.use(Router);
 
@@ -120,6 +121,11 @@ export default new Router({
           path: '/discovery/port/host',
           name: 'OnlineHost',
           component: OnlineHost,
+        },
+        {
+          path: '/discovery/whatweb/task',
+          name: 'WebsiteIdentifies',
+          component: WebsiteIdentifies,
         },
       ]
     },
