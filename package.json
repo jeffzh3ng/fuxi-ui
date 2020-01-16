@@ -1,0 +1,31 @@
+{
+  "name": "megrez-ui",
+  "version": "1.0.0",
+  "private": true,
+  "license": "GPL 3.0",
+  "scripts": {
+    "lint": "vue-cli-service lint",
+    "serve": "vue-cli-service serve --host dev.fuxi.com --port 8083",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "axios": "latest",
+    "bootstrap": "^4.1.3",
+    "iview": "^3.2.1",
+    "material-icons": "^0.3.1",
+    "shards-ui": "^3.0.0",
+    "shards-vue": "^1.0.4",
+    "vue": "^2.5.17",
+    "vue-highlightjs": "^1.3.3",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.1.0",
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "babel-plugin-import": "^1.11.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.1",
+    "vue-template-compiler": "^2.5.17"
+  }
+}
