@@ -56,8 +56,8 @@
                       v-model="newScanData.target"
                       :placeholder="targetPlaceholder"></Input>
                 </FormItem>
-                <FormItem label="Thread">
-                  <Slider v-model="newScanData.thread" :max=50 show-input></Slider>
+                <FormItem label="Threads">
+                  <Slider v-model="newScanData.threads" :max=50 show-input></Slider>
                 </FormItem>
                 <FormItem label="Notification" prop="interest">
                   <Checkbox v-model="newScanData.other"> Notification</Checkbox>
@@ -108,9 +108,8 @@
                         v-model="quickPluginSelect"
                         multiple
                         filterable
-                        v-for="item in pocList" :value="item.key"
                         placeholder="poc">
-                        <Option >{{ item.label }}</Option>
+                        <Option v-for="item in pocList" :value="item.key" v-bind:key="item.key">{{ item.label }}</Option>
                     </Select>
                   </d-col>
                 </d-form-row>
@@ -141,7 +140,7 @@
                   :title="quickModalTitle">
                 <div>
                   <Spin fix v-if="quickModalSpinShow">
-                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"/>
                     <div>Quick scanning</div>
                   </Spin>
                   <pre>{{quickResult}}</pre>
@@ -167,7 +166,7 @@
           name: "poc_scan_" + this.getDateTime(),
           target: "",
           freq: "once",
-          thread: 20,
+          threads: 20,
           poc_id: "",
           other: false,
         },
@@ -259,7 +258,7 @@
         this.quickScanData['target'] = this.quickScanData['target'].split("\n").join(",");
         this.quickScanData['poc'] = this.quickPluginSelect.join(",");
         this.quickScanData['quick'] = true;
-        this.quickModalTitle = this.quickScanData['target'] + " - " + this.quickScanData['poc_name'];
+        this.quickModalTitle = this.quickScanData['target'] + " - " + poc_name.join(",");
         this.quickModalSpinShow = true;
         this.quickResult = "";
         this.getQuickScanResModal = true;

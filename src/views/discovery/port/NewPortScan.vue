@@ -21,10 +21,10 @@
                   ref="formValidate"
                   label-position="left"
                   :label-width="100">
-                <FormItem label="Name" prop="name">
+                <FormItem label="* Name" prop="name">
                   <Input v-model="newTaskData.taskName" placeholder="Enter task name"/>
                 </FormItem>
-                <FormItem label="Target" prop="target">
+                <FormItem label="* Target" prop="target">
                   <Input
                           type="textarea"
                           v-model="newTaskData.targetList"
@@ -32,7 +32,7 @@
                           :placeholder=targetExampleText>
                   </Input>
                 </FormItem>
-                <FormItem label="Port" prop="port">
+                <FormItem label="* Port" prop="port">
                   <label>
                     <Select
                         style="width:200px"
