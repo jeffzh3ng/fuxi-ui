@@ -2,6 +2,7 @@
 import Vue from 'vue';
 import ShardsVue from 'shards-vue';
 import {
+  locale as locale,
   Message as message,
   Button as button,
   Table as table,
@@ -33,6 +34,8 @@ import 'bootstrap/dist/css/bootstrap.css';
 import '@/assets/scss/shards-dashboards.scss';
 import '@/assets/scss/date-range.scss';
 import 'iview/dist/styles/iview.css';
+import lang from 'iview/dist/locale/en-US';
+
 import 'material-icons/iconfont/material-icons.css';
 
 // Core
@@ -43,6 +46,7 @@ import Axios from 'axios'
 // Layouts
 import DefaultLayout from './layouts/DefaultLayout.vue';
 
+locale(lang);
 // Vue.use(iView);
 Vue.component('Button', button);
 Vue.component('Table', table);

@@ -7,6 +7,7 @@ import DefaultContainer from './layouts/DefaultLayout.vue';
 import Login from './views/Login.vue';
 // dashboard
 import Dashboard from './views/Dashboard.vue';
+import Settings from './views/settings/Settings.vue';
 
 // Vulnerability Analysis
 import PocNewScan from './views/scanner/poc/PocNewScan'
@@ -48,6 +49,11 @@ export default new Router({
           path: '/dashboard',
           name: 'Dashboard',
           component: Dashboard,
+        },
+        {
+          path: '/settings',
+          name: 'Settings',
+          component: Settings,
         },
         // Vulnerability Analysis
         {
