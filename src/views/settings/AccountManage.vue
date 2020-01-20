@@ -4,7 +4,7 @@
             <i class="material-icons mr-1">library_add</i>
             <strong>New User</strong>
         </d-button>
-        <d-button size="sm" class="btn-accent ml-auto ml-1 ml-4">
+        <d-button @click="openModalChangePasswd = true" size="sm" class="btn-accent ml-auto ml-1 ml-4">
             <i class="material-icons mr-1">lock_open</i>
             <strong>Change Password</strong>
         </d-button>
@@ -63,6 +63,30 @@
 
                     <d-col class="pt-4 text-right" lg="12" md="12" sm="12">
                         <Button @click="editUser(tempUserData.uid)">
+                            <i class="material-icons mr-1">add_box</i>
+                            Submit
+                        </Button>
+                    </d-col>
+                </d-row>
+            </div>
+        </Modal>
+        <Modal
+                v-model="openModalChangePasswd"
+                scrollable
+                footer-hide
+                title="Change Password">
+            <div>
+                <d-row>
+                    <d-col lg="12" md="12" sm="12" class="pt-3">
+                        <span class="text-danger mr-1">*</span><span>New Password</span>
+                        <Input v-model="passwdData.password" type="password" class="pt-2" placeholder="Password"/>
+                    </d-col>
+                    <d-col lg="12" md="12" sm="12" class="pt-3">
+<!--                        <span class="text-danger mr-1">*</span><span>Verify</span>-->
+                        <Input v-model="passwdData.password_v" type="password" class="pt-1" placeholder="Verify"/>
+                    </d-col>
+                    <d-col class="pt-4 text-right" lg="12" md="12" sm="12">
+                        <Button @click="changePassword">
                             <i class="material-icons mr-1">add_box</i>
                             Submit
                         </Button>
@@ -138,7 +162,12 @@
                     nick: "",
                     email: "",
                 },
+                passwdData: {
+                    password: "",
+                    password_v: "",
+                },
                 openModalEditUser: false,
+                openModalChangePasswd: false
             }
         },
         mounted() {
@@ -182,7 +211,7 @@
                     return
                 }
                 if (this.userData.password_v !== this.userData.password) {
-                    this.$message.error("Please check you password!");
+                    this.$message.error("Password and confirm password don't match!");
                 } else {
                     let data = {
                         username: this.userData.username,
@@ -200,6 +229,32 @@
                                 username: "",
                                 nick: "",
                                 email: "",
+                                password: "",
+                                password_v: "",
+                            };
+                            this.getData()
+                        } else {
+                            this.$message.error(status['message']);
+                            this.getData()
+                        }
+                    })
+                }
+            },
+            changePassword(){
+                if (this.passwdData.password_v !== this.passwdData.password) {
+                    this.$message.error("Password and confirm password don't match!");
+                } else {
+                    let data = {
+                        username: "",
+                        password: this.passwdData.password,
+                    };
+                    this.openModalChangePasswd = false;
+                    this.$axios.put("/admin", data).then(response => {
+                        let status = response['data']['status'];
+                        if (status['status'] === 'success') {
+                            this.$message.success(status['message']);
+                            this.openModalNewUser = false;
+                            this.passwdData = {
                                 password: "",
                                 password_v: "",
                             };

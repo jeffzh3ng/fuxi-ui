@@ -14,11 +14,11 @@
                     <!-- Card Header -->
                     <d-card-header class="border-bottom">
 <!--                        <d-input placeholder="www.example.com" />-->
-                        <Input placeholder="Enter site or ip to test: ww.example.com" style="width: 250px" class="mr-1"/>
-                        <d-button size="sm" class="btn-accent ml-auto mr-4">
-                            <strong>Start Scan</strong>
+                        <Input v-model="testTarget" placeholder="Enter site or ip to test: ww.example.com" style="width: 250px" class="mr-2"/>
+                        <d-button size="sm" class="btn-white ml-auto mr-4">
+                            <strong @click="quicklyScan">Start Scan</strong>
                         </d-button>
-                        <d-button size="sm" class="btn-white ml-2">
+                        <d-button size="sm" class="btn-accent ml-2">
                             <strong>Advanced Scan</strong>
                         </d-button>
                     </d-card-header>
@@ -27,13 +27,55 @@
                     </d-card-body>
                 </d-card>
             </d-col>
+            <Modal
+                    :styles="{top: '20px'}"
+                    footer-hide
+                    width="700"
+                    v-model="openQuicklyScanModal"
+                    :title="testTarget">
+                <div v-for="item in tempItems">
+                    <pre>{{item}}</pre>
+                </div>
+            </Modal>
         </d-row>
     </d-container>
 </template>
 
 <script>
     export default {
-        name: "WebsiteIdentifies"
+        name: "WebsiteIdentifies",
+        data() {
+            return {
+                items: [],
+                tempItems: [],
+                reqApiPath: "discovery/whatweb/task",
+                openQuicklyScanModal: false,
+                testTarget: "",
+            }
+        },
+        mounted() {
+            this.getData()
+        },
+        methods: {
+            getData() {},
+            quicklyScan() {
+                if (this.testTarget.length === 0) {
+                    this.$message.error("Please enter the target");
+                    return
+                }
+                this.openQuicklyScanModal = true;
+                let data = {target: this.testTarget};
+                this.$axios.post(this.reqApiPath + "/test", data).then(response => {
+                    let status = response['data']['status'];
+                    let data = response['data']['result'];
+                    if (status['status'] === 'success') {
+                        this.tempItems = data
+                    } else {
+                        this.$message.error(status.message)
+                    }
+                });
+            }
+        }
     }
 </script>
 

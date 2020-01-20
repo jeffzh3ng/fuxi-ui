@@ -83,8 +83,8 @@
         <d-card class="card-small mb-12">
           <!-- Card Header -->
           <d-card-header class="border-bottom">
-            <h5 class="m-0">Quick Scan</h5>
-            <span><font size="1">Set target and POC for a temporary check</font></span>
+            <h5 class="m-0">Quickly scan</h5>
+            <span><font size="1">Scan the target quickly and do not save results</font></span>
           </d-card-header>
           <br>
           <d-row class="justify-content-center">
@@ -141,7 +141,7 @@
                 <div>
                   <Spin fix v-if="quickModalSpinShow">
                     <Icon type="ios-loading" size=18 class="demo-spin-icon-load"/>
-                    <div>Quick scanning</div>
+                    <div>Scanning</div>
                   </Spin>
                   <pre>{{quickResult}}</pre>
                 </div>
