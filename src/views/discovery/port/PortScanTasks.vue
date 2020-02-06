@@ -187,6 +187,7 @@ export default {
             let _end = currentPage * this.pageSize;
             this.taskItems = this.items.slice(_start,_end);
             this.pageCurrent=currentPage;
+            window.scrollTo(0,0);
         },
         sizeChange(index){
             this.pageSize = index;

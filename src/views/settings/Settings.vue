@@ -19,9 +19,9 @@
                             <TabPane icon="md-hammer" label="Tools Configuration">
                                 <ToolsConfig/>
                             </TabPane>
-<!--                            <TabPane icon="md-cog" label="System configuration">-->
-<!--                                <SystemConfig/>-->
-<!--                            </TabPane>-->
+                            <TabPane icon="md-cog" label="System configuration">
+                                <SystemConfig/>
+                            </TabPane>
                         </Tabs>
                     </d-card-body>
                 </d-card>

@@ -119,12 +119,14 @@
         let _end = currentPage * this.pageSize;
         this.taskItems = this.items.slice(_start,_end);
         this.pageCurrent=currentPage;
+        window.scrollTo(0,0);
       },
       sizeChange(index){
         this.pageSize = index;
         let _start = 0;
         let _end = this.pageSize;
         this.taskItems = this.items.slice(_start,_end);
+        window.scrollTo(0,0);
       },
       scanResFilter(tid){
         window.open('#/scanner/poc/vuls?task_id=' + tid, "_blank");

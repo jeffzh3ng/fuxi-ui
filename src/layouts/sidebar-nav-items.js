@@ -30,7 +30,7 @@ export default function () {
       icon: 'navigation',
       items: [
         {
-          title: 'Website Identifies',
+          title: 'Website Fingerprint',
           icon: 'add',
           to: { name: 'WebsiteIdentifies' },
         },

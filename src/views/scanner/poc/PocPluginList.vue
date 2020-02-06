@@ -169,12 +169,14 @@
         let _end = currentPage * this.pageSize;
         this.pluginItems = this.items.slice(_start,_end);
         this.pageCurrent=currentPage;
+        window.scrollTo(0,0);
       },
       sizeChange(index){
         this.pageSize = index;
         let _start = 0;
         let _end = this.pageSize;
         this.pluginItems = this.items.slice(_start,_end);
+        window.scrollTo(0,0);
       },
       uploadPocFailed(Error, file, fileList) {
         let filename = fileList['name'];

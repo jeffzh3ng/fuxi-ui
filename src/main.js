@@ -35,6 +35,7 @@ import '@/assets/scss/shards-dashboards.scss';
 import '@/assets/scss/date-range.scss';
 import 'iview/dist/styles/iview.css';
 import lang from 'iview/dist/locale/en-US';
+import FlagIcon from 'vue-flag-icon'
 
 import 'material-icons/iconfont/material-icons.css';
 
@@ -71,7 +72,7 @@ Vue.component('Poptip', poptip);
 Vue.component('Tag', tag);
 Vue.component('Tabs', tabs);
 Vue.component('TabPane', tabPane);
-
+Vue.use(FlagIcon);
 ShardsVue.install(Vue);
 Vue.component('default-layout', DefaultLayout);
 Vue.config.productionTip = false;
