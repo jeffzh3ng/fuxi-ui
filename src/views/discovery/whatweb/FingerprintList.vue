@@ -1,16 +1,25 @@
 <template>
     <div>
-        <d-row class="border-bottom py-2 ">
-            <d-col col sm="3" class="d-flex mb-2 mb-sm-0">
-<!--               <d-input placeholder="search"/>-->
+        <d-row class="border-bottom py-3 ">
+            <d-col col sm="4" class="d-flex">
+                <Input @keyup.enter.native="resultFilter()" v-model="filterData.filterKeyword">
+                    <Select v-model="filterData.selectData" slot="prepend" style="width: 80px">
+                        <Option value="domain">Domain</Option>
+                        <Option value="ip">IP</Option>
+                        <Option value="app">APP</Option>
+                    </Select>
+                </Input>
             </d-col>
-            <d-col col sm="9">
+            <d-col col sm="2" class="d-flex">
+                <Input @keyup.enter.native="resultFilter()" v-if="filterData.selectData==='app'" v-model="filterData.filterKeyword2" placeholder="Version: Default: all"/>
+            </d-col>
+            <d-col col sm="6">
                 <d-button @click="getTask()" size="sm" class="d-flex btn-white ml-auto mr-auto ml-sm-auto mr-sm-0 mt-3 mt-sm-0">
                     View Historical Tasks &rarr;
                 </d-button>
             </d-col>
             <Modal footer-hide
-                    width="800"
+                    width="1000"
                     v-model="openTaskModal"
                     title="WhatWeb Online Scan">
                 <div>
@@ -23,7 +32,8 @@
                             <th scope="col" class="border-0 text-center">Target</th>
                             <th scope="col" class="border-0 text-center">Level</th>
                             <th scope="col" class="border-0">Last Modified</th>
-                            <th scope="col" class="border-0">End Date</th></tr>
+                            <th scope="col" class="border-0">End Date</th>
+                            <th scope="col" class="border-0 text-center">OP</th></tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, index) in taskTableData">
@@ -48,6 +58,7 @@
                                 <td class="text-center">{{ item.level }}</td>
                                 <td>{{ item.date }}</td>
                                 <td>{{ item.end_date }}</td>
+                                <td class="text-center">{{ item.op }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -68,8 +79,43 @@
             </Modal>
         </d-row>
         <d-row class="border-bottom py-2" name="top">
-            <d-col col sm="2" class="d-flex mb-2 mb-sm-0">
-                this is empty
+            <d-col col sm="2" class="d-flex mt-3 mb-sm-0">
+                <div>
+                    <table id="task_detail_table">
+                        <tr>
+                            <td>
+                                <span class="text-muted fingerprint-ip-span">
+                                    <strong><i class="material-icons mr-1">language</i>TOTAL</strong>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="fingerprint-ip-span ml-4">
+                                    {{getRowCount(items)}}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="text-muted fingerprint-ip-span">
+                                    <strong><i class="material-icons mr-1">language</i>SERVER</strong>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="fingerprint-ip-span ml-4">
+                                    {{getRowCount(items)}}
+                                </span>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <br>
+                    <div>
+                        <d-button size="sm" class="btn-white ml-auto">
+                            <i class="material-icons mr-1">save_alt</i>
+                            <strong>Export XLS</strong>
+                        </d-button>
+                    </div>
+                </div>
             </d-col>
             <d-col col sm="10">
                 <div  v-for="item in tableData">
@@ -130,9 +176,14 @@
                 tableData: [],
                 taskPageSize: 10,
                 taskPageCurrent: 1,
-                pageSize: 5,
+                pageSize: 10,
                 pageCurrent: 1,
-                openTaskModal: false
+                openTaskModal: false,
+                filterData: {
+                    selectData: "domain",
+                    filterKeyword: "",
+                    filterKeyword2: "",
+                }
             }
         },
         mounted() {
@@ -205,6 +256,32 @@
                     }
                 });
             },
+            resultFilter() {
+                console.log(this.filterData);
+                let url = this.reqApiPath;
+                if(this.filterData.filterKeyword2.length === 0) {
+                    url = this.reqApiPath + "?keyword=" + this.filterData.selectData + "&value=" + this.filterData.filterKeyword
+                } else {
+                    url = this.reqApiPath + "?keyword=" + this.filterData.selectData + "&value=" + this.filterData.filterKeyword + "||" + this.filterData.filterKeyword2
+                }
+                this.$axios.get(url).then(response => {
+                    let status = response['data']['status'];
+                    let data = response['data']['result'];
+                    if (status['status'] === 'success') {
+                        this.items = data;
+                        let _start = ( this.pageCurrent - 1 ) * this.pageSize;
+                        let _end = this.pageCurrent * this.pageSize;
+                        this.tableData = this.items.slice(_start,_end);
+                        this.spinShow = false;
+                        this.$message.info("Filtration completed");
+                    } else {
+                        this.$message.error(status['message']);
+                        this.spinShow = false
+                    }
+                });
+                // this.filterData.filterKeyword = "";
+                // this.filterData.filterKeyword2 = ""
+            }
         }
     }
 </script>

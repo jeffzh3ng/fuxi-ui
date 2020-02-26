@@ -32,6 +32,7 @@
                   <th scope="col" class="border-0 text-center">Vul Count</th>
                   <th scope="col" class="border-0">Start Date</th>
                   <th scope="col" class="border-0">Last Modified</th>
+                  <th scope="col" class="border-0 text-center">OP</th>
                   <th scope="col" class="border-0 text-center">Actions</th>
                 </tr>
                 </thead>
@@ -46,6 +47,7 @@
                   <td class="text-center">{{ item.vul_count }}</td>
                   <td>{{ item.date }}</td>
                   <td>{{ item.end_date }}</td>
+                  <td class="text-center">{{ item.op }}</td>
                   <td class="text-center">
                     <Tooltip placement="top" content="Rescan" theme="light">
                       <Icon @click="rescanTask(item.tid)"  title="rescan task" size="21" type="md-refresh" class="mr-3" />

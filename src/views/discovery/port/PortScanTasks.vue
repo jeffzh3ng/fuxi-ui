@@ -31,6 +31,7 @@
                                     <th scope="col" class="border-0 text-center">Online</th>
                                     <th scope="col" class="border-0">Last Modified</th>
                                     <th scope="col" class="border-0">End Date</th>
+                                    <th scope="col" class="border-0 text-center">OP</th>
                                     <th scope="col" class="border-0 text-center">Actions</th>
                                 </tr>
                                 </thead>
@@ -44,6 +45,7 @@
                                     <td class="text-center">{{ item.online }}</td>
                                     <td>{{ item.date }}</td>
                                     <td>{{ item.end_date }}</td>
+                                    <td class="text-center">{{ item.op }}</td>
                                     <td class="text-center">
                                         <Tooltip placement="left" content="Detail" theme="light">
                                             <Icon @click="getTaskDetail(item.tid)" title="task detail" size="21" type="md-clipboard" class="mr-3" />

@@ -55,7 +55,8 @@
                     <th scope="col" class="border-0">PoC Name</th>
                     <th scope="col" class="border-0">Type</th>
                     <th scope="col" class="border-0">App</th>
-                    <th scope="col" class="border-0">Date</th>
+                    <th scope="col" class="border-0">Last Modified</th>
+                    <th scope="col" class="border-0 text-center">OP</th>
                     <th scope="col" class="border-0 text-center">Actions</th>
                   </tr>
                   </thead>
@@ -70,6 +71,7 @@
                     <td>{{ item.type }}</td>
                     <td>{{ item.app }}</td>
                     <td>{{ item.date }}</td>
+                    <td class="text-center">{{ item.op }}</td>
                     <td class="text-center">
                       <Tooltip placement="top" content="Detail" theme="light">
                         <Icon @click="getPocDetail(item.pid)" title="get code" size="21" type="md-code" class="mr-3" />

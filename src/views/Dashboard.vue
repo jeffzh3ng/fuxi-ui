@@ -9,8 +9,8 @@
     </d-row>
     <d-row>
       <d-col lg="12">
-        <a>this is dashboard page</a>
-        <Button @click="test_api" class="ml-2">Test</Button>
+        <a>Hello World</a>
+<!--        <Button @click="test_api" class="ml-2">Test</Button>-->
       </d-col>
     </d-row>
   </d-container>

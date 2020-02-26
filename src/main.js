@@ -78,8 +78,8 @@ Vue.component('default-layout', DefaultLayout);
 Vue.config.productionTip = false;
 
 // Axios configurable
-let apiPath = window.location.protocol + "//" + window.location.host.split(':')[0] + ":50020/api/v1"; // 测试环境
-// let apiPath = window.location.protocol + "//" + window.location.host + "/api/v1"; // 生产环境
+// let apiPath = window.location.protocol + "//" + window.location.host.split(':')[0] + ":50020/api/v1"; // 测试环境
+let apiPath = window.location.protocol + "//" + window.location.host + "/api/v1"; // 生产环境
 Axios.defaults.baseURL = apiPath;
 Axios.interceptors.request.use(
   config => {
