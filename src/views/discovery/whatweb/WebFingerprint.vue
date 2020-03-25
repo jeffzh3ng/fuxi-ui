@@ -131,6 +131,7 @@
                                 <strong class="title">{{item['domain']}}</strong>
                                 <br>
                                 <span class="title" v-if="item.title.length !== 0">## {{item['title'] | long}}</span>
+                                <span class="teal--text title" v-else>## Title Not Found</span>
                                 <br>
                                 <span v-if="item['c_code'] !== 'zz'" :class="'mr-2 flag-icon flag-icon-'+item['c_code']"/>
                                 <span v-else class="mr-2 flag-icon flag-icon-us"/>
@@ -224,6 +225,15 @@
                             ></v-text-field>
                         </v-col>
 
+                        <v-col cols="12" class="mt-n8">
+                            <v-slider
+                                    class="ml-4 mt-6"
+                                    v-model="adScanOPT.threads"
+                                    label="Threads"
+                                    thumb-label="always"
+                            ></v-slider>
+                        </v-col>
+
                         <v-col cols="12">
                             <v-btn @click="adScan" color="teal" class="float-right ml-2 mr-2 mb-4">
                                 <span class="white--text">Create</span>
@@ -271,6 +281,7 @@
             scanTestDialogOpen: false,
             advancedTaskDialogOpen: false,
             taskDialogOpen: false,
+            whatwebExe: false,
             scanTestData: {url: "", result: []},
             targetExampleText: "Example: \nhttps://www.example.com\n192.168.1.1\n192.168.1.1/24\n192.168.100-200\n",
             adScanLevel: [
@@ -279,10 +290,11 @@
                 {text: "Heavy", value: 4},
             ],
             adScanOPT: {
-                name: "", target: "", level: 3, header: "", cookies: ""
+                name: "", target: "", level: 3, header: "", cookies: "", threads: 15,
             }
         }),
         mounted() {
+            this.exeCheck();
             this.advancedTaskDialogOpen = false;
             this.target = this.$route.query.target;
             this.adScanOPT.name = "whatweb_task_" + this.$tools.getDateTime();
@@ -335,6 +347,10 @@
             },
             scanTemp() {
                 this.scanTestData.result = [];
+                if(!this.whatwebExe) {
+                    this.$message.error("Whatweb is not installed, please try again after installation");
+                    return
+                }
                 if(this.scanTestData.url.length === 0) {
                     this.$message.error("URL is required");
                     return
@@ -364,6 +380,10 @@
                 this.adScanOPT.cookies = "";
             },
             adScan() {
+                if(!this.whatwebExe) {
+                    this.$message.error("Whatweb is not installed, please try again after installation");
+                    return
+                }
                 let data = {
                     name: this.adScanOPT.name,
                     target: this.adScanOPT.target.split("\n").join(","),
@@ -402,6 +422,24 @@
                 } else {
                     window.open(this.$api.SERVER_ADDER + "/discovery/fp/export/csv" + data + "&token=" + this.$api.TOKEN)
                 }
+            },
+            exeCheck() {
+                this.$api.setting.settingList().then(res => {
+                    let response = res.data;
+                    let status = response['status'];
+                    let result = response['result'];
+                    if (status['status'] === "success") {
+                        for (let i=0; i<result.length; i++) {
+                            if (result[i]['key'] === "whatweb_exe") {
+                                if (result[i]['value'].length > 0) {
+                                    this.whatwebExe = true;
+                                }
+                            }
+                        }
+                    } else {
+                        this.$message.error(status['message']);
+                    }
+                });
             },
             sendIPToNetworkPortScanner(){
                 let ip = [];

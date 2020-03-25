@@ -82,6 +82,7 @@
                 newTaskData: {
                     name: "", target: "", portType: "Default", portList: "", option: {text: "Default", value: "10001"},
                 },
+                nmapExe: false,
                 defaultOption: [
                     {text: "Default", value: "10001"},
                     {text: "-sT -T4", value: "10002"},
@@ -92,6 +93,7 @@
             }
         },
         mounted() {
+            this.nmapExeCheck();
             this.target = this.$route.query.target;
             if (this.target !== undefined) {
                 this.newTaskData.target = this.target.split(",").join("\n");
@@ -100,6 +102,10 @@
         },
         methods: {
             newScan() {
+                if (!this.nmapExe) {
+                    this.$message.error("Nmap is not installed, please try again after installation")
+                    return;
+                }
                 let port = "";
                 if (this.newTaskData.portType === "Customize") {
                     port = this.newTaskData.portList.split("\n").join(",");
@@ -135,6 +141,25 @@
                         this.$message.error(status['message']);
                     }
                 })
+            },
+            nmapExeCheck() {
+                this.$api.setting.settingList().then(res => {
+                    let response = res.data;
+                    let status = response['status'];
+                    let result = response['result'];
+                    if (status['status'] === "success") {
+                        for (let i=0; i<result.length; i++) {
+                            if (result[i]['key'] === "nmap_exe") {
+                                if (result[i]['value'].length > 0) {
+                                    this.nmapExe = true;
+                                    // this.nmapExe = false;
+                                }
+                            }
+                        }
+                    } else {
+                        this.$message.error(status['message']);
+                    }
+                });
             }
         }
     }

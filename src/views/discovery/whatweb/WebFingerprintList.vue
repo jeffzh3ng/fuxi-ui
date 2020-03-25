@@ -4,6 +4,7 @@
             <div>
                 <div class="mt-2">
                     <span class="teal--text title" v-if="item.title.length !== 0">## {{item['title']}}</span>
+                    <span class="teal--text title" v-else>## Title Not Found</span>
                 </div>
                 <div>
                     <span>{{item['domain']}}</span>

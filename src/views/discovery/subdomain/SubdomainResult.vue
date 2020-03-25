@@ -12,7 +12,7 @@
         </v-card-title>
 
         <v-row class="mt-n2">
-            <v-col cols="6">
+            <v-col cols="4">
                 <v-btn
                         icon
                         class="mr-4 ml-6"
@@ -65,10 +65,14 @@
                 </v-menu>
             </v-col>
 
-            <v-col cols="6">
+            <v-col cols="8">
                 <v-btn @click="sendTargetToPortScanner" elevation="0" color="teal" class="mr-8">
                     <v-icon class="white--text mr-2">mdi-credit-card-scan-outline</v-icon>
                     <span class="white--text">Port Scan</span>
+                </v-btn>
+                <v-btn @click="sendTargetToWhatweb" elevation="0" color="teal" class="mr-8">
+                    <v-icon class="white--text mr-2">mdi-credit-card-scan-outline</v-icon>
+                    <span class="white--text">Whatweb Scanner</span>
                 </v-btn>
                 <v-btn @click="sendTargetToPocScanner" elevation="0" color="teal">
                     <v-icon class="white--text mr-2">mdi-credit-card-scan-outline</v-icon>
@@ -231,6 +235,13 @@
                     target.push(this.items[i]['subdomain'])
                 }
                 window.open("#/scanner/poc/new?target=" + target.join(","), "_bank")
+            },
+            sendTargetToWhatweb(){
+                let target = [];
+                for (let i=0; i<this.items.length; i++) {
+                    target.push(this.items[i]['subdomain'])
+                }
+                window.open("#/discovery/whatweb?target=" + target.join(","), "_bank")
             },
             sendTargetToPortScanner(){
                 let target = [];
