@@ -3,14 +3,17 @@ import Router from 'vue-router'
 
 import DashboardLayout from "./layout/DashboardLayout";
 import Login from "./views/Login";
-import Dashboard from "./views/Dashboard";
+import Dashboard from "./views/dashboard/Dashboard";
 import Temp from "./views/Temp";
 import Settings from "./views/setting/Settings";
 
-import PocTaskManagement from "./views/scanner/PocTaskManagement";
-import PocPluginManagement from "./views/scanner/PocPluginManagement";
-import PocVulnerabilities from "./views/scanner/PocVulnerabilities";
-import NewPoCTask from "./views/scanner/NewPoCTask";
+import PocTaskManagement from "./views/scanner/poc/PocTaskManagement";
+import PocPluginManagement from "./views/scanner/poc/PocPluginManagement";
+import PocVulnerabilities from "./views/scanner/poc/PocVulnerabilities";
+import SqlmapScanner from "./views/scanner/sqlmap/SqlmapScanner";
+import SqlmapResult from "./views/scanner/sqlmap/SqlmapResult";
+
+import NewPoCTask from "./views/scanner/poc/NewPoCTask";
 import NewNetPortScan from "./views/discovery/port/NewNetPortScan";
 import PortTaskManagement from "./views/discovery/port/PortTaskManagement";
 import PortTaskResult from "./views/discovery/port/PortTaskResult";
@@ -70,6 +73,14 @@ export default new Router({
           path: '/scanner/poc/vul',
           name: 'PocVulnerabilities',
           component: PocVulnerabilities
+        },{
+          path: '/scanner/sqlmap/tasks',
+          name: 'SqlmapScanner',
+          component: SqlmapScanner
+        },{
+          path: '/scanner/sqlmap/result',
+          name: 'SqlmapResult',
+          component: SqlmapResult
         },{
           path: '/discovery/port/new',
           name: 'NewNetPortScan',

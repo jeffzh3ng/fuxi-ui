@@ -1,112 +1,54 @@
 <template>
-    <div class="mr-4 ml-4">
-        <v-row>
-            <v-col cols="3">
-                <v-card class="mx-auto"
-                        color="teal">
-                    <v-card-title>
-                        <v-row align="start" class="white--text">
-                            <div>
-                                <span class="ml-4 font-weight-black">Vulnerability</span>
-                                <br>
-                                <span class="ml-4">1000</span>
-                            </div>
-                        </v-row>
-                        <v-icon color="white" class="mr-4" size="64">mdi-bug</v-icon>
-                    </v-card-title>
-                </v-card>
-            </v-col>
-            <v-col cols="3">
-                <v-card class="mx-auto"
-                        color="teal">
-                    <v-card-title>
-                        <v-row align="start" class="white--text">
-                            <div>
-                                <span class="ml-4 font-weight-black">Vulnerability</span>
-                                <br>
-                                <span class="ml-4">1000</span>
-                            </div>
-                        </v-row>
-                        <v-icon color="white" class="mr-4" size="64">mdi-bug</v-icon>
-                    </v-card-title>
-                </v-card>
-            </v-col>
-            <v-col cols="3">
-                <v-card class="mx-auto"
-                        color="teal">
-                    <v-card-title>
-                        <v-row align="start" class="white--text">
-                            <div>
-                                <span class="ml-4 font-weight-black">Vulnerability</span>
-                                <br>
-                                <span class="ml-4">1000</span>
-                            </div>
-                        </v-row>
-                        <v-icon color="white" class="mr-4" size="64">mdi-bug</v-icon>
-                    </v-card-title>
-                </v-card>
-            </v-col>
-            <v-col cols="3">
-                <v-card class="mx-auto"
-                        color="teal">
-                    <v-card-title>
-                        <v-row align="start" class="white--text">
-                            <div>
-                                <span class="ml-4 font-weight-black">Vulnerability</span>
-                                <br>
-                                <span class="ml-4">1000</span>
-                            </div>
-                        </v-row>
-                        <v-icon color="white" class="mr-4" size="64">mdi-bug</v-icon>
-                    </v-card-title>
-                </v-card>
-            </v-col>
-        </v-row>
-
-    </div>
+    <v-sheet color="rgba(0, 0, 0, .12)">
+        <v-sparkline
+                :value="value"
+                :gradient="gradient"
+                :smooth="radius || false"
+                :padding="padding"
+                :line-width="width"
+                height="50"
+                :stroke-linecap="lineCap"
+                :gradient-direction="gradientDirection"
+                :fill="fill"
+                :type="type"
+                :auto-line-width="autoLineWidth"
+                auto-draw
+        >
+            <template v-slot:label="item">
+                {{ item.value }}%
+            </template>
+        </v-sparkline>
+    </v-sheet>
 </template>
 
+
 <script>
-    const exhale = ms =>
-        new Promise(resolve => setTimeout(resolve, ms))
+    const gradients = [
+        ['#222'],
+        ['#42b3f4'],
+        ['red', 'orange', 'yellow'],
+        ['purple', 'violet'],
+        ['#00c6ff', '#F0F', '#FF0'],
+        ['#f72047', '#ffd200', '#1feaea'],
+    ];
 
     export default {
         data: () => ({
-            checking: false,
-            heartbeats: [],
+            width: 1,
+            radius: 10,
+            padding: 8,
+            lineCap: 'round',
+            gradient: gradients[5],
+            value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+            gradientDirection: 'top',
+            gradients,
+            fill: false,
+            type: 'trend',
+            autoLineWidth: false,
         }),
-
-        computed: {
-            avg () {
-                const sum = this.heartbeats.reduce((acc, cur) => acc + cur, 0)
-                const length = this.heartbeats.length
-
-                if (!sum && !length) return 0
-
-                return Math.ceil(sum / length)
-            },
-        },
-
-        created () {
-            this.takePulse(false)
-        },
-
-        methods: {
-            heartbeat () {
-                return Math.ceil(Math.random() * (120 - 80) + 80)
-            },
-            async takePulse (inhale = true) {
-                this.checking = true
-
-                inhale && await exhale(1000)
-
-                this.heartbeats = Array.from({ length: 20 }, this.heartbeat)
-
-                this.checking = false
-            },
-        },
     }
 </script>
+
 
 <style scoped>
 

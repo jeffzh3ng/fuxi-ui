@@ -15,6 +15,10 @@
             <v-col cols="1">
             </v-col>
             <v-col cols="6">
+                <span v-if="!nmapExe" class="error--text ml-2">
+                    ** The nmap was not found, you need to configure it
+                    <a href="/#/settings" class="ml-2">Go to</a>
+                </span>
                 <v-col>
                     <v-text-field
                             label="Task Name"
@@ -82,7 +86,7 @@
                 newTaskData: {
                     name: "", target: "", portType: "Default", portList: "", option: {text: "Default", value: "10001"},
                 },
-                nmapExe: false,
+                nmapExe: true,
                 defaultOption: [
                     {text: "Default", value: "10001"},
                     {text: "-sT -T4", value: "10002"},
@@ -148,6 +152,7 @@
                     let status = response['status'];
                     let result = response['result'];
                     if (status['status'] === "success") {
+                        this.nmapExe = false;
                         for (let i=0; i<result.length; i++) {
                             if (result[i]['key'] === "nmap_exe") {
                                 if (result[i]['value'].length > 0) {

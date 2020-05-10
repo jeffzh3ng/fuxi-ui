@@ -32,7 +32,7 @@
                     >
                         <v-list-item-content >
                             <v-list-item-title>
-                                <span :class="isPath(subItem.path) ? 'teal--text' : 'black--text'">{{ subItem.text }}</span>
+                                <span :class="isPath(subItem.path) ? 'teal--text' : ''">{{ subItem.text }}</span>
                             </v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
@@ -40,11 +40,11 @@
 
                 <v-list-item v-else-if="item.dc" :key="i" link @click="goToPath(item.path)" >
                     <v-list-item-action>
-                        <v-icon :class="isPath(item.path) ? 'teal--text' : 'black--text'">{{ item.icon }}</v-icon>
+                        <v-icon :class="isPath(item.path) ? 'teal--text' : ''">{{ item.icon }}</v-icon>
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title>
-                            <span :class="isPath(item.path) ? 'teal--text' : 'black--text'">{{ item.text }}</span>
+                            <span :class="isPath(item.path) ? 'teal--text' : ''">{{ item.text }}</span>
                         </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>

@@ -37,6 +37,33 @@ const scanner = {
         }
         return request.get("/scanner/poc/vul")
     },
+    sqlmapTaskList() {
+        return request.get("/scanner/sqlmap/task")
+    },
+    sqlmapNewTask(data) {
+        return request.post("/scanner/sqlmap/task", data)
+    },
+    sqlmapTaskDelete(tid) {
+        return request.delete("/scanner/sqlmap/task/" + tid)
+    },
+    sqlmapTaskRescan(tid) {
+        return request.put("/scanner/sqlmap/task/" + tid + "?action=rescan")
+    },
+    sqlmapTaskDetail(tid) {
+        return request.get("/scanner/sqlmap/task/" + tid)
+    },
+    sqlmapTaskResult(tid) {
+        return request.get("/scanner/sqlmap/result?keyword=tid&value=" + tid)
+    },
+    sqlmapResult() {
+        return request.get("/scanner/sqlmap/result")
+    },
+    sqlmapResultDelete(rid) {
+        return request.delete("/scanner/sqlmap/result/" + rid)
+    },
+    sqlmapResultDetail(rid) {
+        return request.get("/scanner/sqlmap/result/" + rid)
+    },
 };
 
 export default scanner;

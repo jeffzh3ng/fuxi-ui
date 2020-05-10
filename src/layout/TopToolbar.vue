@@ -13,6 +13,9 @@
                 <v-btn class="mr-4" icon @click="goToPath('/discovery/port/new')">
                     <v-icon>mdi-map-marker-path</v-icon>
                 </v-btn>
+                <v-btn class="mr-4" icon @click="goToPath('/scanner/sqlmap/tasks?task=new')">
+                    <v-icon>mdi-needle</v-icon>
+                </v-btn>
                 <v-btn class="mr-4" icon @click="goToPath('/discovery/subdomain/new')">
                     <v-icon>mdi-web-box</v-icon>
                 </v-btn>
@@ -26,12 +29,32 @@
                     <v-icon>mdi-spider-web</v-icon>
                 </v-btn>
 
-                <v-tooltip bottom>
+<!--                <v-tooltip bottom>-->
+<!--                    <template v-slot:activator="{ on }">-->
+<!--                        <span @click="changeLanguage(language)" v-on="on" :class="'mr-4 ml-12 flag-icon flag-icon-' + language"/>-->
+<!--                    </template>-->
+<!--                    <span>Language(unfinished)</span>-->
+<!--                </v-tooltip>-->
+
+                <v-menu left offset-y>
                     <template v-slot:activator="{ on }">
-                        <span @click="changeLanguage(language)" v-on="on" :class="'mr-4 ml-12 flag-icon flag-icon-' + language"/>
+                        <span v-on="on" :class="'mr-4 ml-12 flag-icon flag-icon-' + language"/>
                     </template>
-                    <span>Language(unfinished)</span>
-                </v-tooltip>
+
+                    <v-list>
+                        <div @click="language = 'us'">
+                            <span class="mr-4 ml-4 flag-icon flag-icon-us"/>
+                            <span class="mr-3 grey--text">English</span>
+                        </div>
+                    </v-list>
+                    <v-divider/>
+                    <v-list>
+                        <div @click="language = 'cn'">
+                            <span class="mr-4 ml-4 flag-icon flag-icon-cn"/>
+                            <span class="mr-3 grey--text">Unfinished</span>
+                        </div>
+                    </v-list>
+                </v-menu>
 
                 <v-menu>
                     <template v-slot:activator="{ on }">
@@ -71,7 +94,12 @@
                             </v-list-item-action>
                             <v-list-item-content>
                                 <v-list-item-title>
-                                    <span>Help & Documentation</span>
+                                        <a
+                                                class="black--text"
+                                                href="https://github.com/jeffzh3ng/fuxi#issues"
+                                                target="_blank">
+                                            Help & Documentation
+                                        </a>
                                 </v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
@@ -142,5 +170,5 @@
 </script>
 
 <style scoped>
-
+    a:link { text-decoration: none;}
 </style>

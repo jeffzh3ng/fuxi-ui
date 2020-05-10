@@ -6,6 +6,7 @@ export default function () {
                 { text: "Plugins", path: "/scanner/poc/plugin" },{ text: "Vulnerabilities", path: "/scanner/poc/vul" },
             ]
         },
+        { dc: true, icon: 'mdi-needle', text: 'SQLMAP', path: '/scanner/sqlmap/tasks' },
         { divider: true },
         { header: true, text: "INFORMATION" },
         { group: true, text: "Network Port", icon: 'mdi-map-marker-path', items: [

@@ -12,6 +12,12 @@
         </v-card-title>
 
         <v-row class="mt-n6">
+            <v-col cols="12">
+                <span v-if="!whatwebExe" class="error--text ml-8">
+                    ** The whatweb was not found, you need to configure it
+                    <a href="/#/settings" class="ml-2">Go to</a>
+                </span>
+            </v-col>
             <v-col cols="4">
                 <v-text-field
                         class="ml-6"
@@ -281,7 +287,7 @@
             scanTestDialogOpen: false,
             advancedTaskDialogOpen: false,
             taskDialogOpen: false,
-            whatwebExe: false,
+            whatwebExe: true,
             scanTestData: {url: "", result: []},
             targetExampleText: "Example: \nhttps://www.example.com\n192.168.1.1\n192.168.1.1/24\n192.168.100-200\n",
             adScanLevel: [
@@ -429,6 +435,7 @@
                     let status = response['status'];
                     let result = response['result'];
                     if (status['status'] === "success") {
+                        this.whatwebExe = false;
                         for (let i=0; i<result.length; i++) {
                             if (result[i]['key'] === "whatweb_exe") {
                                 if (result[i]['value'].length > 0) {
